@@ -355,12 +355,16 @@ export default defineConfig({
             { text: 'Git 手册', link: '/toolbox/technical/git-manual' },
             { text: 'Linux 手册', link: '/toolbox/technical/linux-manual' },
             { text: 'Homebrew 手册', link: '/toolbox/technical/homebrew' },
-            { text: 'iTerm2 手册', link: '/toolbox/technical/item2-manual' },
             { text: 'zsh 配置指南', link: '/toolbox/technical/install_zsh' },
             { text: '其他常用指令', link: '/toolbox/technical/tools' },
+            { text: 'Docker 教程', link: '/toolbox/technical/docker_tourial' },
+            { text: '端口转发', link: '/toolbox/technical/端口转发' },
             { text: '深度学习环境配置', link: '/toolbox/technical/ubuntu-nvidia-cuda-install' },
-            { text: '计算机科学知识', link: '/toolbox/study/cs' },
-            { text: 'Kindle 电子书下载', link: '/toolbox/kindle' }
+            { text: '计算机科学书单', link: '/toolbox/study/cs_books' },
+            { text: '计算机科学课程', link: '/toolbox/study/cs_class' },
+            { text: '计算机科学技术栈', link: '/toolbox/study/cs_techself' },
+            { text: 'AutoCut 视频剪辑', link: '/toolbox/study/autocut' },
+            { text: 'Kindle 电子书下载', link: '/toolbox/study/kindle' }
           ]
         }
       ],
