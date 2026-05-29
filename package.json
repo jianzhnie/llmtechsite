@@ -25,5 +25,9 @@
   "homepage": "https://github.com/jianzhnie/llmtech#readme",
   "devDependencies": {
     "vitepress": "^1.6.4"
+  },
+  "dependencies": {
+    "katex": "^0.17.0",
+    "markdown-it-katex": "^2.0.3"
   }
 }

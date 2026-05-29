@@ -12,7 +12,23 @@ export default defineConfig({
   ignoreDeadLinks: true,
 
   head: [
-    ['link', { rel: 'icon', href: '/llmtech/favicon.ico' }]
+    ['link', { rel: 'icon', href: '/llmtech/favicon.ico' }],
+    ['link', { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css' }],
+    ['script', { src: 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js' }],
+    ['script', { src: 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js' }],
+    ['script', {}, `
+      document.addEventListener('DOMContentLoaded', function() {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: '\\\\[', right: '\\\\]', display: true},
+            {left: '\\\\(', right: '\\\\)', display: false}
+          ],
+          throwOnError: false
+        });
+      });
+    `]
   ],
 
   markdown: {
