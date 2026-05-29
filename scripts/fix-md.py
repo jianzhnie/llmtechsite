@@ -36,7 +36,7 @@ def is_html_tag(name):
 
 # Known non-HTML tokens that look like HTML tags but aren't
 # ML tokens + AI reasoning tags + XML-style tokens
-SPECIAL_TOKENS = 'EOS|BOS|UNK|PAD|SEP|CLS|MASK|EOF|EOC|MSK|eos|bos|unk|pad|sep|cls|mask|eof|eoc|msk|think|answer|s'
+SPECIAL_TOKENS = 'EOS|BOS|UNK|PAD|SEP|CLS|MASK|EOF|EOC|MSK|eos|bos|unk|pad|sep|cls|mask|eof|eoc|msk|think|answer|s|file|search|url|name|prompt|key|text|code|reason|directory|input|output|message|question|command|task|short_task_desc|full_code_string|list_of_suggestions|list_of_focus_areas|what_you_want_to_find_on_website'
 
 # Patterns for code blocks (use HTML entities to preserve display)
 CODE_PATTERNS = [
@@ -53,8 +53,8 @@ CODE_PATTERNS = [
 TEXT_PATTERNS = [
     (re.compile(r'(?<![`])(</?(' + SPECIAL_TOKENS + r')>)', re.IGNORECASE), lambda m: f'`{m.group(1)}`'),
     (re.compile(r'(?<![`\\])(?<!\w)([A-Z][a-zA-Z]*(?:\.[a-zA-Z]+)*(?:::[a-zA-Z]+)*)\s*<([A-Z][a-zA-Z]*)>'), r'`\1<\2>`'),
-    (re.compile(r'\{\{(?!\s)'), '{ {'),
-    (re.compile(r'(?<!\s)\}\}'), '} }'),
+    (re.compile(r'\{\{'), '{ {'),
+    (re.compile(r'\}\}'), '} }'),
 ]
 
 # Skip these files (complex math/LaTeX content that's hard to auto-fix)

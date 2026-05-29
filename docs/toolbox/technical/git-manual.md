@@ -115,7 +115,7 @@ git remote
 # 查看关联的远程仓库的详细信息
 git remote -v
 # 删除远程仓库的关联
-git remote remove <name>
+git remote remove &lt;&lt;<name>&gt;&gt;
 # 修改远程仓库的关联地址
 git remote set-url origin <newurl>
 # 刷新获取远程分支
@@ -147,7 +147,7 @@ git reset HEAD~
 # 撤销版本
 git reset --hard xxxx
 # 比较当前文件和暂存区文件差异 git diff
-git diff <file>
+git diff &lt;&lt;<file>&gt;&gt;
 # 工作区和暂存区的比较
 git diff HEAD -- <文件>
 ```
@@ -226,8 +226,8 @@ git revert <commitd>
 
 ```shell
 # Add a submodule to a repo
-git submodule add <url> <name>
-git add <name>
+git submodule add &lt;&lt;<url>&gt;&gt; &lt;&lt;<name>&gt;&gt;
+git add &lt;&lt;<name>&gt;&gt;
 git commit -m "example comments"
 git push
 
@@ -296,7 +296,7 @@ Host github.com
 # 查看log信息
 git log –oneline
 # 查看每次详细修改内容的diff
-git log -p <file>
+git log -p &lt;&lt;<file>&gt;&gt;
 # 查看最近两次详细修改内容的diff
 git log -p -2
 # 查看log信息列表
