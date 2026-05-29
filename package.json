@@ -1,0 +1,29 @@
+{
+  "name": "llmtech",
+  "version": "1.0.0",
+  "description": "> **探索人工智能的无限可能** > > 专注于大语言模型、强化学习、深度学习等前沿AI技术的研究与实践 > > 分享实用的技术教程、项目经验和行业洞察",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jianzhnie/llmtech.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/jianzhnie/llmtech/issues"
+  },
+  "homepage": "https://github.com/jianzhnie/llmtech#readme",
+  "devDependencies": {
+    "vitepress": "^1.6.4"
+  }
+}
