@@ -8,31 +8,23 @@ export default {
     const route = useRoute()
 
     function renderMath() {
-      if (typeof window !== 'undefined' && (window as any).renderMathInElement) {
-        nextTick(() => {
-          (window as any).renderMathInElement(document.body, {
-            delimiters: [
-              { left: '$$', right: '$$', display: true },
-              { left: '$', right: '$', display: false },
-            ],
-            throwOnError: false,
-          })
-        })
-      }
+      nextTick(() => {
+        try {
+          const render = (window as any).renderMathInElement
+          if (render) {
+            render(document.body, {
+              delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+              ],
+              throwOnError: false,
+            })
+          }
+        } catch (_) {}
+      })
     }
 
-    onMounted(() => {
-      // Wait for KaTeX to load, then render
-      const check = setInterval(() => {
-        if (typeof (window as any).renderMathInElement !== 'undefined') {
-          clearInterval(check)
-          renderMath()
-        }
-      }, 100)
-      // Stop checking after 5 seconds
-      setTimeout(() => clearInterval(check), 5000)
-    })
-
-    watch(() => route.path, () => renderMath())
+    onMounted(renderMath)
+    watch(() => route.path, renderMath)
   },
 }
