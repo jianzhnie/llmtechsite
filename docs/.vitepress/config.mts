@@ -15,25 +15,8 @@ export default defineConfig({
   head: [
     ['link', { rel: 'icon', href: '/llmtech/favicon.ico' }],
     ['link', { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css' }],
-    ['script', { defer: '', src: 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js' }],
-    ['script', { defer: '', src: 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js' }],
-    ['script', {}, `
-      function renderKaTeX() {
-        if (typeof renderMathInElement === 'undefined') {
-          setTimeout(renderKaTeX, 100);
-          return;
-        }
-        renderMathInElement(document.body, {
-          delimiters: [
-            {left: '$$', right: '$$', display: true},
-            {left: '$', right: '$', display: false}
-          ],
-          throwOnError: false
-        });
-      }
-      document.addEventListener('DOMContentLoaded', renderKaTeX);
-      document.addEventListener('vitepress:afterRouteChange', renderKaTeX);
-    `]
+    ['script', { src: 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js' }],
+    ['script', { src: 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js' }],
   ],
 
   markdown: {
