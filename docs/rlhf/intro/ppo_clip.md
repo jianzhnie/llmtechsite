@@ -138,9 +138,9 @@ Dual-Clip PPO 特别适用于以下情况：
 
 ## **解耦裁剪 (Decoupled Clip)**
 
-传统的 PPO 使用对称的裁剪范围 $[1 - \epsilon, 1 + \epsilon]$PPO中的裁剪机制是保证训练稳定的核心，但它也可能带来一个严重问题：**熵坍塌（entropy collapse）**。它会过度抑制低概率 Token 的探索，导致模型的生成策略变得单一和确定性，缺乏多样性。这在需要创新性思维的复杂推理任务中是致命的。
+传统的 PPO 使用对称的裁剪范围 $[1 - \epsilon, 1 + \epsilon]$。PPO 中的裁剪机制是保证训练稳定的核心，但它也可能带来一个严重问题：**熵坍塌（entropy collapse）**。它会过度抑制低概率 Token 的探索，导致模型的生成策略变得单一和确定性，缺乏多样性。这在需要创新性思维的复杂推理任务中是致命的。
 
-为了更好地鼓励探索，DAPO 引入了**Clip-Higher**机制，即放宽PPO裁剪范围的上限 $ 1+ \epsilon_{\text{high} }$ , 对优势为正和为负的情况使用不同的裁剪范围，即 $[\epsilon_{\text{low} }, \epsilon_{\text{high} }]$，给低概率、但可能带来高回报的token更大的探索空间。其形式化表示为：
+为了更好地鼓励探索，DAPO 引入了**Clip-Higher**机制，即放宽PPO裁剪范围的上限 $ 1+ \epsilon_{\text{high} }$ , 对优势为正和为负的情况使用不同的裁剪范围，即 $[\epsilon_{\text{low} }, \epsilon_{\text{high} }]$，给低概率、但可能带来高回报的 Token 更大的探索空间。其形式化表示为：
 $$
 J_{\text{DAPO} }(\theta) = \mathbb{E}_{(q,a) \sim P(Q), \{o_i\}_{i=1}^G \sim \pi_{\theta_{\text{old} } }(O \mid q)} \left[ \sum_{i=1}^G \frac{1}{|o_i|} \sum_{t=1}^{|o_i|} \min(r_{i,t}(\theta) A_i, \text{clip}(r_{i,t}(\theta), 1-\varepsilon_{\text{low} }, 1+\varepsilon_{\text{high} }) A_i) \right]
 $$
@@ -159,7 +159,7 @@ $$
 |r_t(\theta) - 1| = \left| \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{\text{old} } }(a_t|s_t)} - 1 \right| \leq \epsilon
 $$
 
-其中，$ r_t(\theta) $ 是在 token 级别的概率比率。这个约束意味着，对于任意一个 token，新策略对其的预测概率不能与旧策略偏离太多。
+其中，$ r_t(\theta) $ 是在 Token 级别的概率比率。这个约束意味着，对于任意一个 token，新策略对其的预测概率不能与旧策略偏离太多。
 
 现在，我们考虑一个场景：模型正在解决一个复杂的数学问题，其中某一步需要一个不常用但至关重要的符号或数字（我们称之为“稀有 token”）。在旧策略 $ \pi_{\theta_{\text{old} } } $ 中，这个 token 的概率可能非常低，比如 $ 10^{-5} $。如果这是一个正确的 token，我们希望新策略 $ \pi_\theta $ 能够大幅提升它的概率。然而，在固定裁剪的约束下，新概率的最大值被限制为 $ \pi_{\theta_{\text{old} } }(a_t|s_t) \times (1 + \epsilon) $。如果 $ \epsilon = 0.2 $，那么新概率最大也只能是 $ 1.2 \times 10^{-5} $。从 $ 10^{-5} $ 到 $ 1.2 \times 10^{-5} $ 的提升，对于整个策略的优化来说几乎是杯水车薪。
 

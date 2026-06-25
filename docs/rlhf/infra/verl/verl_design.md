@@ -1,6 +1,6 @@
-# Verl 源码解析与 Hybrid Flow 编程范式
+# veRL 源码解析与 Hybrid Flow 编程范式
 
-`Verl` 是发表于系统领域顶级会议 EuroSys 的论文 [HybridFlow](https://arxiv.org/abs/2409.19256v2) 的开源实现。本文将深入解析 Verl 框架的源码实现及其背后的编程范式 HybridFlow 的核心概念、设计动机，以及如何使用 `verl` 提供的 API 进行编程开发。
+`veRL` 是发表于系统领域顶级会议 EuroSys 的论文 [HybridFlow](https://arxiv.org/abs/2409.19256v2) 的开源实现。本文将深入解析 veRL 框架的源码实现及其背后的编程范式 HybridFlow 的核心概念、设计动机，以及如何使用 `verl` 提供的 API 进行编程开发。
 
 - 论文链接：https://arxiv.org/pdf/2409.19256v2
 - 代码链接：https://github.com/volcengine/veRL

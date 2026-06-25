@@ -1,10 +1,10 @@
-# 从Ray的角度出发分析 OpenRLHF 和 Verl 的框架设计
+# 从 Ray 的角度出发分析 OpenRLHF 和 veRL 的框架设计
 
 # 1. Ray
 
-## 1.1 Ray的核心概念
+## 1.1 Ray 的核心概念
 
-在传统的编程中，我们经常使用到2个核心概念：function和class。而在分布式系统中，我们希望可以分布式并行执行这些function和class。Ray使用装饰器`@ray.remote`来将function包装成Ray task，将class包装成Ray actor，包装过后的结果可以在远端并行执行。接下来我们就来细看task/actor（注意，这里的actor是ray中的概念，不是rlhf-ppo中actor模型的概念）
+在传统的编程中，我们经常使用到 2 个核心概念：function 和 class。而在分布式系统中，我们希望可以分布式并行执行这些 function 和 class。Ray 使用装饰器 `@ray.remote` 来将 function 包装成 Ray task，将 class 包装成 Ray actor，包装过后的结果可以在远端并行执行。接下来我们就来细看 task/actor（注意，这里的 actor 是 Ray 中的概念，不是 RLHF-PPO 中 Actor 模型的概念）
 
 ### Ray Task
 
@@ -378,9 +378,9 @@ Group 中 [创建 worker](https:github.com/OpenRLHF/OpenRLHF/blob/17bbb313551a3a
 - Rollout：批量推理模块，用于生成 trace samples，需要和 Actor 同步权重
 - RM、Ref：Eval 模块，仅前向计算，权重不更新
 
-理论上，训练模块可以采用市面上所有的训练引擎充当 backend（torch DDP、FSDP、torchtitan、Megatron、Deepspeed 等），批量推理模块可以采用所有的推理引擎充当 backend（SGLang、vLLM、TGI 等）。但 Eval 模块训练推理引擎都可以做，需要仔细斟酌要用哪个，考虑到[训练和推理引擎的精度差异](https:github.com/zhaochenyang20/Awesome-ML-SYS-Tutorial/blob/main/rlhf/verl/readme.md)（logit 数值上约有 10% 的相对误差），在涉及关键的 loss 计算还是要优先确保精度而非速度，所以我们可能会更倾向于在训练引擎跑一个 plain forward。
+理论上，训练模块可以采用市面上所有的训练引擎充当 backend（torch DDP、FSDP、torchtitan、Megatron、DeepSpeed 等），批量推理模块可以采用所有的推理引擎充当 backend（SGLang、vLLM、TGI 等）。但 Eval 模块训练推理引擎都可以做，需要仔细斟酌要用哪个，考虑到[训练和推理引擎的精度差异](https:github.com/zhaochenyang20/Awesome-ML-SYS-Tutorial/blob/main/rlhf/verl/readme.md)（logit 数值上约有 10% 的相对误差），在涉及关键的 loss 计算还是要优先确保精度而非速度，所以我们可能会更倾向于在训练引擎跑一个 plain forward。
 
-在 OpenRLHF 中，训练模块采用 Deepspeed，它的好处在于和现有 HF 生态融合地非常好，基本没有兼容性问题，也不太依赖特定版本，当然用 FSDP 也差不多。推理模块用 vLLM，同时支持了 DP（多个 engine）、TP（每个 engine 内部）并行。
+在 OpenRLHF 中，训练模块采用 DeepSpeed，它的好处在于和现有 HF 生态融合地非常好，基本没有兼容性问题，也不太依赖特定版本，当然用 FSDP 也差不多。推理模块用 vLLM，同时支持了 DP（多个 engine）、TP（每个 engine 内部）并行。
 
 ## 2.2. Ray 资源调度与 colocate
 
@@ -487,7 +487,7 @@ veRL 设计上最好的一点就是模块间充分的解耦，这使得修改和
 
 但在实际的源代码中，veRL 目前的策略只有一种，也就是 colocate 所有模块。我个人认为，如果要在现有代码的基础上支持多种（或者任意的）colocate 策略，WorkerDict 和 RayWorkerGroup 可能要大改，至少需要考虑如何建立每个 resource group 的通信组，如何做环境变量的设置，以及如何做不同资源组之间的 method bind/rebind 等等。
 
-所以 veRL 主要强调的还是它的 Hybrid Engine 能力，也就是不同模块共享同一个数据结构（WorkerDict）和资源组，并且 WorkerDict 可以灵活地在多种模块、多个 engine 之间切换。这个 Hybrid Engine 的定义与 [Deepspeed-Chat](https:github.com/deepspeedai/DeepSpeed/blob/master/blogs/deepspeed-chat/README.md) 非常接近。
+所以 veRL 主要强调的还是它的 Hybrid Engine 能力，也就是不同模块共享同一个数据结构（WorkerDict）和资源组，并且 WorkerDict 可以灵活地在多种模块、多个 engine 之间切换。这个 Hybrid Engine 的定义与 [DeepSpeed-Chat](https:github.com/deepspeedai/DeepSpeed/blob/master/blogs/deepspeed-chat/README.md) 非常接近。
 
 <img src="https://pica.zhimg.com/v2-a7ff959f616d22456cd54c93a47ef2a8_1440w.jpg" alt="img" style="zoom:50%;" />
 
@@ -612,7 +612,7 @@ veRL 采用的 single control 设计将控制逻辑集中在 `RayPPOTrainer` 里
 
 在这个例子中，4类模型分开部署在node0和node1上。以Actor为例，它分布在“node0的gpu0/1 + node1的gpu0/1”上。这一点是由Ray实现的：我们自己定制化资源分配的方案，进而管控模型的分配方式
 
-而当实际训练时，我们还可进一步引入Deepspeed zero做优化：以Actor为例，上图中的4个Actor构成zero中的数据并行组（world_size = 4），根据zero的配置，我们可以在这4张卡间做optimizer/gradients/weights的切片
+而当实际训练时，我们还可进一步引入DeepSpeed zero做优化：以Actor为例，上图中的4个Actor构成zero中的数据并行组（world_size = 4），根据zero的配置，我们可以在这4张卡间做optimizer/gradients/weights的切片
 
 ### （2）部署vllm_engines
 

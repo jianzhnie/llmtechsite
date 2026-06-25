@@ -1,8 +1,8 @@
-# Verl 相关特性介绍
+# veRL 相关特性介绍
 
-- VeRL框架的论文（[HybridFlow]）：[https://arxiv.org/pdf/2409.19256](https://arxiv.org/pdf/2409.19256)
+- veRL 框架的论文（[HybridFlow]）：[https://arxiv.org/pdf/2409.19256](https://arxiv.org/pdf/2409.19256)
 
-- VeRL框架的官方解读：[https://mp.weixin.qq.com/s/JYQQs2vqnhRz82rtDI-1OQ](https://mp.weixin.qq.com/s/JYQQs2vqnhRz82rtDI-1OQ)
+- veRL 框架的官方解读：[https://mp.weixin.qq.com/s/JYQQs2vqnhRz82rtDI-1OQ](https://mp.weixin.qq.com/s/JYQQs2vqnhRz82rtDI-1OQ)
 
 - 仓库地址：[https://github.com/volcengine/verl](https://github.com/volcengine/verl)
 
@@ -15,7 +15,7 @@
 
 
 
-## Verl  介绍
+## veRL 介绍
 
 ### 1. RL（Post-Training）复杂计算流程给 LLM 训练带来全新的挑战
 
@@ -43,7 +43,7 @@
 
 
 
-这是目前verl训练框架的配置情况，对于不同的训练角色，可以选择不同的预训练模型及训练后端的支持（多控制器)。随后将他们与`main_ppo.py`中对应的角色进行绑定，然后以参数的形式传入到`ray_trainer.py`中进行调用。对于trainer文件中实际是以一个单控制流函数`fit()`的方式来进行，只需要从对应的模型中获得计算值的情况，然后再导入到对应的算法模块与工具模块中，就可以快速的开展RL训练任务。
+这是目前 veRL 训练框架的配置情况，对于不同的训练角色，可以选择不同的预训练模型及训练后端的支持（多控制器）。随后将他们与 `main_ppo.py` 中对应的角色进行绑定，然后以参数的形式传入到 `ray_trainer.py` 中进行调用。对于 trainer 文件中实际是以一个单控制流函数 `fit()` 的方式来进行，只需要从对应的模型中获得计算值的情况，然后再导入到对应的算法模块与工具模块中，就可以快速的开展 RL 训练任务。
 
 1.运行框架中浅黄色表示推理框架，深黄色表示训练框架
 

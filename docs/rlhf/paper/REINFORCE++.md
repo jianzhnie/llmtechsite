@@ -2,7 +2,7 @@
 
 ## 摘要
 
-基于人类反馈的强化学习（RLHF）已成为对齐大型语言模型与人类偏好的关键方法，通过近端策略优化（PPO）、直接偏好优化（DPO）、REINFORCE留一法（RLOO）、ReMax和组相对策略优化（GRPO）等方法实现了快速算法演进。我们提出REINFORCE++，这是经典REINFORCE算法的增强变体，融合了PPO的关键优化技术同时消除了critic 网络的需求。REINFORCE++实现了三个主要目标：
+基于人类反馈的强化学习（RLHF）已成为对齐大型语言模型与人类偏好的关键方法，通过近端策略优化（PPO）、直接偏好优化（DPO）、REINFORCE 留一法（RLOO）、ReMax 和组相对策略优化（GRPO）等方法实现了快速算法演进。我们提出 REINFORCE++，这是经典 REINFORCE 算法的增强变体，融合了 PPO 的关键优化技术同时消除了 Critic 网络的需求。REINFORCE++实现了三个主要目标：
 
 （1）简洁性
 
@@ -16,15 +16,15 @@
 
 大型语言模型（LLMs）的快速发展显著提升了其生成连贯、上下文相关且类人文本的能力。然而，将这些模型与人类偏好对齐仍然面临关键挑战，因为模型可能生成与用户意图或伦理准则不符的输出。基于人类反馈的强化学习（RLHF）通过将人类偏好纳入训练过程，已成为解决这一挑战的主要方法。
 
-该领域经历了显著的算法创新，从基础性的近端策略优化（PPO）到最近的直接偏好优化（DPO）、REINFORCE留一法（RLOO）、ReMax和组相对策略优化（GRPO）。PPO虽然有效，但需要Critic网络从而引入额外计算开销。而GRPO等新方法虽然解决了特定优化挑战，但可能引入复杂性和不稳定性。
+该领域经历了显著的算法创新，从基础性的近端策略优化（PPO）到最近的直接偏好优化（DPO）、REINFORCE 留一法（RLOO）、ReMax 和组相对策略优化（GRPO）。PPO 虽然有效，但需要 Critic 网络从而引入额外计算开销。而 GRPO 等新方法虽然解决了特定优化挑战，但可能引入复杂性和不稳定性。
 
-本文提出REINFORCE++，这是经典REINFORCE算法的新变体，集成了PPO的关键优化技术同时无需Critic网络。我们的方法围绕三个主要目标设计：
+本文提出 REINFORCE++，这是经典 REINFORCE 算法的新变体，集成了 PPO 的关键优化技术同时无需 Critic 网络。我们的方法围绕三个主要目标设计：
 
-● 简洁性：基于简单的REINFORCE框架，最小化实现复杂度
+● 简洁性：基于简单的 REINFORCE 框架，最小化实现复杂度
 
-● 训练稳定性：通过 token 级KL惩罚、PPO-clip损失 和 标准化优势更新 确保鲁棒训练动态
+● 训练稳定性：通过 Token 级 KL 惩罚、PPO-Clip 损失和标准化优势更新确保鲁棒训练动态
 
-● 效率：移除Critic网络降低计算开销，适合大规模应用
+● 效率：移除 Critic 网络降低计算开销，适合大规模应用
 
 通过大量实证评估，我们证明REINFORCE++在显著降低计算需求的同时实现了具有竞争力的对齐性能。主要贡献包括：
 
@@ -87,9 +87,9 @@
 
 REINFORCE++整合了几个关键优化，以增强训练稳定性和效率：
 
-### 3.1 Token级KL惩罚
+### 3.1 Token 级 KL 惩罚
 
-在传统RLHF方法中，KL散度惩罚通常作用于完整序列层面。我们提出token级KL惩罚机制，将KL约束细化到每个生成token：
+在传统 RLHF 方法中，KL 散度惩罚通常作用于完整序列层面。我们提出 Token 级 KL 惩罚机制，将 KL 约束细化到每个生成 Token：
 
 $$
 r(s_{t},a_{t})=I(s_{t}=[EOS])r(x,y)-\beta\cdot KL(t)
@@ -100,8 +100,8 @@ $$
 
 其中：
 
-- $I(s_{t}=[EOS])$ 是指示函数，表示 $t$是否为最终token, 仅在序列结束符位置生效
-- $KL(t)=D_{\text{KL} }\left(\pi_{\theta}(a_t|s_t) \| \pi_{\text{SFT} }(a_t|s_t)\right)$ 计算当前策略与SFT模型的token级分布差异
+- $I(s_{t}=[EOS])$ 是指示函数，表示 $t$ 是否为最终 Token，仅在序列结束符位置生效
+- $KL(t)=D_{\text{KL} }\left(\pi_{\theta}(a_t|s_t) \| \pi_{\text{SFT} }(a_t|s_t)\right)$ 计算当前策略与 SFT 模型的 Token 级分布差异
 - $\beta$ 为动态调整的惩罚系数
 
 该设计实现两个关键优势：
@@ -118,8 +118,8 @@ $$
 其中：
 
 - $r_t (\theta) = \frac{\pi_\theta (a_t | s_t)}{\pi_{\text{old} } (a_t | s_t)}$是在新策略与旧策略下，在状态 $s_t$下采取动作 $a_t$的概率比。
-- $\hat{A}_t$是token $t$的估计优势。
-- $\text{clip} (r_t (\theta), 1 - \epsilon, 1 + \epsilon)$将概率比限制在 $[1 - \epsilon, 1 + \epsilon]$范围内，其中 $\epsilon$是一个小的超参数（通常设置为0.2左右）。
+- $\hat{A}_t$ 是 Token $t$ 的估计优势。
+- $\text{clip} (r_t (\theta), 1 - \epsilon, 1 + \epsilon)$ 将概率比限制在 $[1 - \epsilon, 1 + \epsilon]$ 范围内，其中 $\epsilon$ 是一个小的超参数（通常设置为 0.2 左右）。
 
 ### 3.3 小批量更新
 

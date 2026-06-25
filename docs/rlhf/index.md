@@ -1,6 +1,6 @@
 ## LLM RLHF Framework
 
-- [大模型RL框架的演进与发展趋势](/rlhf/infra/RL-Infra_overview)
+- [大模型 RL 框架的演进与发展趋势](/rlhf/infra/RL-Infra_overview)
 - [面向 LLM 的开源强化学习库](/rlhf/infra/Open-source-rl-library)
 - [RLHF 训练框架 Slime](/rlhf/infra/Slime)
 - [RLHF 训练框架 ROLL](/rlhf/infra/ROLL)
@@ -16,18 +16,18 @@
 - [RLHF 训练框架 VeRL](/rlhf/infra/Verl)
 - [RLHF 训练框架 VeRL 源码解读](/rlhf/infra/Verl源码解读)
 - [RLHF 训练框架 VeRL 参数配置指南](/rlhf/infra/Verl参数配置)
-- [OpenRLHF & &Verl参数转换指南](/rlhf/infra/OpenRLHF&Verl参数转换指南)
-- [从 Ray 角度分析 OpenRLHF 和 Verl 的工程设计](/rlhf/infra/Ray_OpenRLHF_Verl)
-- [Ray与LLM强化学习框架设计](/rlhf/infra/Ray与LLM强化学习框架设计)
+- [OpenRLHF & veRL 参数转换指南](/rlhf/infra/OpenRLHF&Verl参数转换指南)
+- [从 Ray 角度分析 OpenRLHF 和 veRL 的工程设计](/rlhf/infra/Ray_OpenRLHF_Verl)
+- [Ray 与 LLM 强化学习框架设计](/rlhf/infra/Ray与LLM强化学习框架设计)
 
 
-## Verl 源码分析
+## veRL 源码分析
 
 ### 核心实现
 - [核心算法实现](/rlhf/infra/verl/core_algos)
-- [Verl 单控制器设计详解](/rlhf/infra/verl/verl.single_controller设计详解)
-- [Verl 源码解析与 Hybrid Flow 编程范式](/rlhf/infra/verl/verl_design)
-- [Verl 中PPO 示例架构详解](/rlhf/infra/verl/verl_ppo)
+- [veRL 单控制器设计详解](/rlhf/infra/verl/verl.single_controller设计详解)
+- [veRL 源码解析与 Hybrid Flow 编程范式](/rlhf/infra/verl/verl_design)
+- [veRL 中 PPO 示例架构详解](/rlhf/infra/verl/verl_ppo)
 
 ### Actor 实现
 - [FSDP Actor 实现](/rlhf/infra/verl/fsdp_actor)
@@ -43,13 +43,13 @@
 
 ### Rollout 相关
 - [Hugging Face Rollout](/rlhf/infra/verl/hf_rollout)
-- [VLLM Rollout](/rlhf/infra/verl/vllm_rollout)
+- [vLLM Rollout](/rlhf/infra/verl/vllm_rollout)
 - [Rollout Schemas](/rlhf/infra/verl/rollout_schemas)
 
-### VLLM 集成
-- [FSDP VLLM 集成](/rlhf/infra/verl/fsdp_vllm)
-- [Megatron VLLM 集成](/rlhf/infra/verl/megatron_vllm)
-- [VLLM Server](/rlhf/infra/verl/vllm_server)
+### vLLM 集成
+- [FSDP vLLM 集成](/rlhf/infra/verl/fsdp_vllm)
+- [Megatron vLLM 集成](/rlhf/infra/verl/megatron_vllm)
+- [vLLM Server](/rlhf/infra/verl/vllm_server)
 
 ### 奖励管理
 - [朴素奖励管理器](/rlhf/infra/verl/naive_reward_manager)
@@ -61,7 +61,7 @@
 - [理解 RLHF](/rlhf/intro/rlhf_advance)
 - [Chip Huyen 对 RLHF 的分析](/rlhf/intro/rlhf_chiphuyen)
 - [RLHF 相关知识整理](/rlhf/intro/rlhf_overview)
-- [RLHF 中KL 散度的近似计算](/rlhf/intro/KL散度的近似计算方法)
+- [RLHF 中 KL 散度的近似计算](/rlhf/intro/KL散度的近似计算方法)
 - [RLHF 中的 Policy Gradient Algorithms](/rlhf/intro/rlhf_policy_gradient)
 - [浅谈 GRPO 的系列改进（From GRPO to DAPO and GSPO）](/rlhf/intro/grpo-to-dapo-and-gspo)
 - [重新思考 PPO-Clip — GRPO 时代下的各种变体](/rlhf/intro/ppo_clip)

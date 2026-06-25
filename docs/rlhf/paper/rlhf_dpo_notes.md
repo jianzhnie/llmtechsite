@@ -268,7 +268,7 @@ L_{DPO} = log \sigma \left( \beta log  \frac{\pi(y_{w}|x)} {\pi_{ref}(y_{w} | x)
 $$
 因此，不需要优化奖励函数，我们就能优化最优策略。
 
-### 在 Bardley-Terry模型下推导DPO目标
+### 在 Bradley-Terry 模型下推导 DPO 目标
 
 在Bradley-Terry 偏好模型下推导DPO目标是直接的，我们有
 $$

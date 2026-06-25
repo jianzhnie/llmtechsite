@@ -1,4 +1,4 @@
-# OpenRLHF: 一个易于使用、可扩展且高性能的RLHF框架
+# OpenRLHF：一个易于使用、可扩展且高性能的 RLHF 框架
 
 ## 摘要
 
@@ -56,7 +56,7 @@ $$
 \text{loss}(\phi)=-\sum_{i}\log p_{\phi}\left(x_{i}\mid inst,x_{<i}\right),
 $$
 
-​        其中$x_{i}$是序列中的第$i$个token，$inst$是人类指令和提示，$\phi$是模型的参数。
+​        其中 $x_{i}$ 是序列中的第 $i$ 个 Token，$inst$ 是人类指令和提示，$\phi$ 是模型的参数。
 
 - **Reward Model训练**: 从移除最终嵌入层的SFT模型开始，开发者训练一个模型，输入提示和响应，输出标量Reward。具体来说，Reward Model的损失函数如公式2所示，
 
@@ -66,7 +66,7 @@ $$
 
   其中$r_{\theta}(x,y)$是Reward Model对提示$x$和响应$y$的标量输出，$y_{w}$是$y_{w}$和$y_{l}$对中的优选响应，$D$是人类比较的数据集。
 
-- **PPO训练**: 开发者在他们的 bandit 环境中使用近端策略优化（PPO）微调语言模型。在这个环境中，随机客户提示被呈现，并期望得到一个响应。环境然后根据Reward Model生成Reward并结束回合，给定提示-响应对。此外，在每个token上添加来自SFT模型的每个token的Kullback-Leibler（KL）散度惩罚，以缓解Reward Model的过度优化。从RM权重初始化值函数为强化学习（RL）微调提供了一个稳定的起点。PPO的损失函数如公式3所示。
+- **PPO 训练**: 开发者在他们的 bandit 环境中使用近端策略优化（PPO）微调语言模型。在这个环境中，随机客户提示被呈现，并期望得到一个响应。环境然后根据 Reward Model 生成 Reward 并结束回合，给定提示-响应对。此外，在每个 Token 上添加来自 SFT 模型的每个 Token 的 Kullback-Leibler（KL）散度惩罚，以缓解 Reward Model 的过度优化。从 RM 权重初始化值函数为强化学习（RL）微调提供了一个稳定的起点。PPO 的损失函数如公式 3 所示。
 
   $$
   loss(\phi)=-E_{(x,y)\sim D_{\pi,\phi\text{RL} } }\left[r\theta(x,y)-\beta\log\left(\pi\phi^{\text{RL} }(y\mid x)/\pi^{\text{SFT} }(y\mid x)\right)\right]
@@ -126,9 +126,9 @@ RLHF算法的性能取决于训练和推理效率。使用LLaMA2 7B和NVIDIA A10
 
 在训练大语言模型（LLMs）时，像PPO这样的强化学习（RL）算法可能会不稳定。我们已经尽最大努力验证了实现细节，一般的推理和学习过程如图2和图3所示以供参考。此外，OpenRLHF在PPO实现中应用了几种技巧来稳定训练[8]，包括：
 
-- 仅在序列的结束文本token上预测Reward。
+- 仅在序列的结束文本 Token 上预测 Reward。
 
-- 对语言模型使用token级强化学习。
+- 对语言模型使用 Token 级强化学习。
 
 - 在PPO中使用Kullback-Leibler（KL）散度损失项。
 

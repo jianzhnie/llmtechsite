@@ -412,7 +412,7 @@ $$
 
 ## 附录B. DPO实现细节和超参数
 
-DPO相对容易实现；下面提供了DPO损失的PyTorch代码示例：
+DPO 相对容易实现；下面提供了 DPO 损失的 PyTorch 代码示例：
 
 ```python
 import torch.nn.functional as F

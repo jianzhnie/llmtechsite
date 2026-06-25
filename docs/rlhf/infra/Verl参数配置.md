@@ -1,6 +1,6 @@
-# Verl 训练配置说明
+# veRL 训练配置说明
 
-## FSDP 后端的PPO 训练配置
+## FSDP 后端的 PPO 训练配置
 
 ### 数据部分（Data）
 
