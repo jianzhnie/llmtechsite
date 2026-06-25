@@ -1,7 +1,7 @@
 # Machine Learning
 
 ### AutoML 工具箱
-- [AutoML简述](/mlwiki/AutoML/AutoML简述)
+- [AutoML 简述](/mlwiki/AutoML/AutoML简述)
 - [auto_ml](/mlwiki/AutoML/auto_ml)
 - [auto-sklearn](/mlwiki/AutoML/auto-sklearn)
 - [AutoFeaturetools](/mlwiki/AutoML/AutoFeaturetools)
@@ -14,18 +14,18 @@
 
 ### Spark
 - [Hadoop](/mlwiki/Spark/Hadoop)
-- [Scala编程](/mlwiki/Spark/Scala编程)
+- [Scala 编程](/mlwiki/Spark/Scala编程)
 - [scala-style-guide](/mlwiki/Spark/scala-style-guide)
-- [Java和Scala编程对比](/mlwiki/Spark/Java和Scala编程对比)
+- [Java 和 Scala 编程对比](/mlwiki/Spark/Java和Scala编程对比)
 - [Spark](/mlwiki/Spark/Spark)
 - [spark-installation](/mlwiki/Spark/spark-installation)
-- [Spark入门](/mlwiki/Spark/Spark入门)
-- [RDD编程](/mlwiki/Spark/RDD编程)
+- [Spark 入门](/mlwiki/Spark/Spark入门)
+- [RDD 编程](/mlwiki/Spark/RDD编程)
 - [Spark_RDD](/mlwiki/Spark/Spark_RDD)
-- [Spark生态](/mlwiki/Spark/Spark生态)
+- [Spark 生态](/mlwiki/Spark/Spark生态)
 - [SparkSQL](/mlwiki/Spark/SparkSQL)
-- [SparkStreming](/mlwiki/Spark/SparkStreming)
-- [基于NVIDIAGPU和RAPIDS加速Spark3.0](/mlwiki/Spark/基于NVIDIAGPU和RAPIDS加速Spark3.0)
+- [SparkStreaming](/mlwiki/Spark/SparkStreming)
+- [基于 NVIDIA GPU 和 RAPIDS 加速 Spark 3.0](/mlwiki/Spark/基于NVIDIAGPU和RAPIDS加速Spark3.0)
 
 ### Python HandBook
 - [Python 多进程](/mlwiki/python/multiprocess)
