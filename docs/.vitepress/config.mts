@@ -3,7 +3,7 @@ import sidebar from './sidebar'
 
 // https://vitepress.dev/zh/reference/site-config
 export default defineConfig({
-  base: '/llmtech/',
+  base: '/llmtechsite/',
   lang: 'zh-CN',
   title: "Robin's AI Lab",
   description: '探索人工智能的无限可能 — 大语言模型、强化学习、深度学习等前沿AI技术的研究与实践',
@@ -13,7 +13,7 @@ export default defineConfig({
   ignoreDeadLinks: true,
 
   head: [
-    ['link', { rel: 'icon', href: '/llmtech/favicon.ico' }],
+    ['link', { rel: 'icon', href: '/llmtechsite/favicon.ico' }],
     ['link', { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css' }],
     ['script', { src: 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js' }],
     ['script', { src: 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js' }],
@@ -80,7 +80,7 @@ export default defineConfig({
     },
 
     editLink: {
-      pattern: 'https://github.com/jianzhnie/llmtech/edit/main/docs/:path',
+      pattern: 'https://github.com/jianzhnie/llmtechsite/edit/main/docs/:path',
       text: '在 GitHub 上编辑此页'
     },
 
