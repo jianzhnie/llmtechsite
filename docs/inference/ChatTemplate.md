@@ -143,7 +143,7 @@ Natalia sold 48+24 = 72 clips altogether in April and May.
 
 
 
-## 在 Chat Template 中应用 Math Cot  Prompt
+## 在 Chat Template 中应用 Math CoT Prompt
 
 ```python
 from transformers import AutoTokenizer

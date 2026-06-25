@@ -2,13 +2,13 @@
 
 ## 简介
 
-Automatic Prefix Caching 自动前缀缓存（简称APC）通过缓存已有查询的KV缓存，使得新查询若与已有查询共享相同前缀时，可直接复用对应的KV缓存，从而跳过共享部分的重复计算。
+Automatic Prefix Caching 自动前缀缓存（简称 APC）通过缓存已有查询的 KV 缓存，使得新查询若与已有查询共享相同前缀时，可直接复用对应的 KV 缓存，从而跳过共享部分的重复计算。
 
 ## Automatic Prefix Caching 实现细节
 
-PagedAttention的核心思想是将每个请求的KV缓存划分为多个**KV块**。每个块包含固定数量token的注意力键值对。PagedAttention 算法允许这些块存储在非连续的物理内存中，从而通过按需分配内存来消除内存碎片。
+PagedAttention 的核心思想是将每个请求的 KV 缓存划分为多个 **KV 块**。每个块包含固定数量 token 的注意力键值对。PagedAttention 算法允许这些块存储在非连续的物理内存中，从而通过按需分配内存来消除内存碎片。
 
-我们基于以下关键观察实现KV缓存的自动化管理：每个KV块可以通过**块内token**和**该块之前的prefix token**唯一标识。
+我们基于以下关键观察实现 KV 缓存的自动化管理：每个 KV 块可以通过**块内 token** 和**该块之前的 prefix token** 唯一标识。
 
 ```shell
                     Block 1                  Block 2                  Block 3
@@ -20,10 +20,10 @@ Block 3: |<------------------ prefix -------------------->| |<--- block tokens -
 
 在上述示例中：
 
-- **第一个KV块**可通过块内token序列"A gentle breeze stirred"唯一标识
-- **第三个KV块**则需要同时包含：
-  - 块内token序列"laughed in the distance"
-  - 前缀token序列"A gentle breeze stirred the leaves as children"
+- **第一个 KV 块**可通过块内 token 序列"A gentle breeze stirred"唯一标识
+- **第三个 KV 块**则需要同时包含：
+  - 块内 token 序列"laughed in the distance"
+  - 前缀 token 序列"A gentle breeze stirred the leaves as children"
 
 由此可建立严格的映射关系：
 
@@ -63,9 +63,9 @@ hash(prefix tokens + block tokens) <--> KV Block
 
 当用户输入包含非离散的模态（例如图像、音频等）时，我们可以采用不同的哈希方式来缓存不同模态的输入。例如，对于图像输入，可以使用感知哈希（perceptual hashing）方法，以便缓存相似的输入图像。
 
-## 在vLLM中启用APC
+## 在 vLLM 中启用 APC
 
-在vLLM引擎中设置`enable_prefix_caching=True`即可启用APC。以下为示例代码：
+在 vLLM 引擎中设置 `enable_prefix_caching=True` 即可启用 APC。以下为示例代码：
 
 ```python
 import time
@@ -144,19 +144,20 @@ get_generation_time(
 ```
 
 ## 典型应用场景
-我们描述两种APC能显著提升性能的场景：
+
+我们描述两种 APC 能显著提升性能的场景：
 
 1. **长文档查询**
 
-   用户对同一份长文档（如软件手册或年度报告）进行多次不同查询时，APC允许vLLM仅需处理一次长文档，后续所有请求均可通过复用其KV缓存来避免重复处理。这使得vLLM能以更高吞吐量和更低延迟服务后续请求。
+   用户对同一份长文档（如软件手册或年度报告）进行多次不同查询时，APC 允许 vLLM 仅需处理一次长文档，后续所有请求均可通过复用其 KV 缓存来避免重复处理。这使得 vLLM 能以更高吞吐量和更低延迟服务后续请求。
 
 2. **多轮对话**
 
-   用户在同一会话中与应用进行多次交互时，APC允许vLLM跨所有后续对话轮次复用历史对话的处理结果，从而显著提升后续请求的吞吐量和降低延迟。
+   用户在同一会话中与应用进行多次交互时，APC 允许 vLLM 跨所有后续对话轮次复用历史对话的处理结果，从而显著提升后续请求的吞吐量和降低延迟。
 
 
 ## 限制说明
 
-APC通常不会降低vLLM的性能表现，但需注意：
-- APC仅优化查询处理阶段（预填充阶段）耗时，不会减少新token生成阶段（解码阶段）耗时
-- 当vLLM大部分时间用于生成长答案时，或新查询与现有查询无共享前缀时，APC不会带来性能提升
+APC 通常不会降低 vLLM 的性能表现，但需注意：
+- APC 仅优化查询处理阶段（预填充阶段）耗时，不会减少新 token 生成阶段（解码阶段）耗时
+- 当 vLLM 大部分时间用于生成长答案时，或新查询与现有查询无共享前缀时，APC 不会带来性能提升

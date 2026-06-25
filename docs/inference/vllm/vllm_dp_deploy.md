@@ -73,7 +73,7 @@ vllm serve $MODEL --headless --data-parallel-size 4 --data-parallel-size-local 2
     --data-parallel-address 10.99.48.128 --data-parallel-rpc-port 13345
 ```
 
-**示例2：在第一个节点上仅运行 API 服务器, 在第二个节点上运行所有引擎，实现 DP=4。**
+**示例2：在第一个节点上仅运行 API 服务器，在第二个节点上运行所有引擎，实现 DP=4。**
 
 ```bash
 # Node 0  (with ip address 10.99.48.128)
@@ -85,7 +85,7 @@ vllm serve $MODEL --headless --data-parallel-size 4 --data-parallel-size-local 4
 
 ```
 
-### 2.3 使用  Ray 后端
+### 2.3 使用 Ray 后端
 
 使用 `--data-parallel-backend=ray` 可以简化多节点部署，仅需一个启动命令即可启动所有本地和远程 DP 进程，无需手动指定 `--data-parallel-address`。
 
@@ -99,7 +99,7 @@ vllm serve $MODEL --data-parallel-size 4 --data-parallel-size-local 2 \
 - 只需在任意节点执行单一启动命令即可启动所有本地和远程 DP 进程，相比在每个节点单独启动更为便捷
 - 无需指定 `--data-parallel-address`，运行命令的节点将自动作为 `--data-parallel-address` 使用
 - 无需指定 `--data-parallel-rpc-port`
-- 当一个数据并行组需要多个节点时， *例如*单个模型副本需在至少两个节点上运行，请务必设置 `VLLM_RAY_DP_PACK_STRATEGY="span"` ，此时 `--data-parallel-size-local` 参数将被忽略并自动确定
+- 当一个数据并行组需要多个节点时，*例如*单个模型副本需在至少两个节点上运行，请务必设置 `VLLM_RAY_DP_PACK_STRATEGY="span"`，此时 `--data-parallel-size-local` 参数将被忽略并自动确定
 - 远程 DP 进程将根据 Ray 集群的节点资源进行动态分配
 
 
@@ -122,7 +122,7 @@ vllm serve $MODEL --data-parallel-size 4 --data-parallel-size-local 2 \
 
 ### 3.2 示例
 
-如果 DP Rank 位于同一位置（相同节点/IP 地址），则使用默认的 RPC 端口，但必须为每个Rank指定不同的 HTTP 服务器端口：
+如果 DP Rank 位于同一位置（相同节点/IP 地址），则使用默认的 RPC 端口，但必须为每个 Rank 指定不同的 HTTP 服务器端口：
 
 ```bash
 # Rank 0
@@ -233,7 +233,7 @@ python launch_online_dp.py \
 
 **示例：启动代理服务器**
 
-假设，已经在单个节点上启动了两个 vLLM DP 部署实例,  DP Rank 0 和 Rank 1 分别运行在 9000 和 9001 端口：
+假设，已经在单个节点上启动了两个 vLLM DP 部署实例，DP Rank 0 和 Rank 1 分别运行在 9000 和 9001 端口：
 
 ```Bash
 cd examples/external_online_dp

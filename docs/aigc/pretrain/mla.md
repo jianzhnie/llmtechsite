@@ -1,8 +1,8 @@
 # Multi-Head Latent Attention (MLA)
 
-> **约定**：所有计算使用行向量，即 $ y = x W $。
+> **约定**：所有计算使用行向量，即 $y = xW$。
 
-## Q 的计算公式如下：
+## Q 的计算
 
 $$
 \begin{align}
@@ -19,7 +19,7 @@ $$
 - $W^{DQ} \in \mathbb{R}^{d \times d_c^{\prime}}$、$W^{UQ} \in \mathbb{R}^{d_c^{\prime} \times d_h n_h}$ 分别是查询的下投影和上投影矩阵；
 - $W^{QR} \in \mathbb{R}^{d_c^{\prime} \times d_h^R n_h}$ 用于生成携带 RoPE 的解耦查询。
 
-## KV 的计算公式如下：
+## KV 的计算
 
 $$
 \begin{align}
@@ -52,7 +52,7 @@ $$
 
 其中 $W^{O} \in \mathbb{R}^{d_h n_h \times d}$ 是输出投影矩阵。
 
-## 实际参数大小如下：
+## 实际参数配置
 
 - $d = \text{hidden\_size} = 7168$
 - $d_c = \text{kv\_lora\_rank} = 512$
@@ -73,7 +73,7 @@ Y = X A B, \quad C = A B
 $$
 
 其中：
-- $X \in \mathbb{R}^{m \times d}$ 是输入 hidden states，
+- $X \in \mathbb{R}^{m \times d}$ 是输入隐状态（hidden states），
 - $A \in \mathbb{R}^{d \times d_c}$、$B \in \mathbb{R}^{d_c \times n}$ 是权重矩阵，
 - $C \in \mathbb{R}^{d \times n}$ 是 absorb 后的等效权重矩阵。
 
@@ -129,7 +129,7 @@ T_{\text{Absorb}} &= 2 b n_h d_c s (d_h + s), \\
 \end{align*}
 $$
 
-→ **Prefill 阶段 Normal 更快**，且此阶段是**计算瓶颈**，故显式计算 q 和 k。
+→ **Prefill 阶段 Normal 更快**，且此阶段是**计算瓶颈**，故显式计算 $\mathbf{q}$ 和 $\mathbf{k}$。
 
 #### **Decode 阶段**（$s_q = 1, s_{kv} = s$）
 

@@ -146,7 +146,7 @@ python3 -m sglang_router.launch_server \
 
 ### 2. 独立 HTTP 模式（Separate Launch）
 
-将 Gateway 和 Worker 分开部署，Worker 独立运行并暴露 HTTP  API 接口，Gateway 通过 URL 列表发现并连接它们。
+将 Gateway 和 Worker 分开部署，Worker 独立运行并暴露 HTTP API 接口，Gateway 通过 URL 列表发现并连接它们。
 
 场景： 多节点部署、Worker 独立扩缩容。
 
@@ -188,7 +188,7 @@ python -m sglang_router.launch_router \
 
 ### 4. Prefill/Decode 解耦模式（PD Disaggregation）
 
-将 LLM 推理的两个关键阶段 预填充（Prefill）和解码（Decode）的Worker分离到不同的 Worker 集群，利用 PD 感知缓存，实现对资源的精细化管理和负载均衡。
+将 LLM 推理的两个关键阶段——预填充（Prefill）和解码（Decode）——的 Worker 分离到不同的 Worker 集群，利用 PD 感知缓存，实现对资源的精细化管理和负载均衡。
 
 场景： 追求极致资源优化和复杂调度策略。
 

@@ -2,7 +2,7 @@
 
 ## 1. 引言
 
-在大语言模型（LLM）快速发展的今天，注意力机制（Attention Mechanism）作为Transformer架构的核心组件，其计算效率直接影响着模型的性能表现。然而，标准的注意力计算在处理长序列时会遇到显存和计算效率的双重瓶颈。本文将深入探讨**Online Softmax**技术，这是理解**FlashAttention**算法（一种显著提升Transformer计算效率的创新方法）的关键技术基础。
+在大语言模型（LLM）快速发展的今天，注意力机制（Attention Mechanism）作为 Transformer 架构的核心组件，其计算效率直接影响着模型的性能表现。然而，标准的注意力计算在处理长序列时会遇到显存和计算效率的双重瓶颈。本文将深入探讨**Online Softmax**技术，这是理解**FlashAttention**算法（一种显著提升 Transformer 计算效率的创新方法）的关键技术基础。
 
 ## 2. 自注意力机制基础
 
@@ -55,7 +55,7 @@ def naive_matmul(A, B):
 
 ### 3.2 分块矩阵乘法
 
-为提高矩阵乘法在硬件上的缓存性能，我们采用**分块矩阵乘法（Tiled Matrix Multiplication）**技术。该方法将大矩阵分解为可放入高速缓存（如SRAM）的小块（Tiles），通过数据复用最大化计算效率：
+为提高矩阵乘法在硬件上的缓存性能，我们采用**分块矩阵乘法（Tiled Matrix Multiplication）** 技术。该方法将大矩阵分解为可放入高速缓存（如 SRAM）的小块（Tiles），通过数据复用最大化计算效率：
 
 ```python
 import numpy as np
@@ -88,7 +88,7 @@ $$
 \text{Softmax}(x_i) = \frac{e^{x_i} }{\sum_{j=1}^{n} e^{x_j} }
 $$
 
-直接计算$e^{x_i}$容易导致**数值溢出 （Overflow）** 。例如，在FP16格式下，最大可表示数值约为65504，而$e^{11.1}$就已超出此范围。
+直接计算$e^{x_i}$容易导致**数值溢出（Overflow）**。例如，在 FP16 格式下，最大可表示数值约为 65504，而$e^{11.1}$就已超出此范围。
 
 ### 4.2 安全Softmax（Safe Softmax）
 
@@ -156,11 +156,11 @@ def softmax_3pass(input_array):
     return output
 ```
 
-该算法需要三次遍历。在Transformer自注意力中，$\{x_{i}\}$ 是由 $QK^{T}$ 计算出的 Pre-Softmax Logits。这意味着如果我们不存储所有 Logits $\{x_{i}\}_{i=1}^{N}$（因为没有足够大的 SRAM 来容纳它们），我们就需要访问 $Q$ 和 $K$ 三次（以便动态地重新计算 Logits），这在 I/O 上是极其低效的。
+该算法需要三次遍历。在 Transformer 自注意力中，$\{x_{i}\}$ 是由 $QK^{T}$ 计算出的 Pre-Softmax Logits。这意味着如果我们不存储所有 Logits $\{x_{i}\}_{i=1}^{N}$（因为没有足够大的 SRAM 来容纳它们），我们就需要访问 $Q$ 和 $K$ 三次（以便动态地重新计算 Logits），这在 I/O 上是极其低效的。
 
 ### 4.4 两轮遍历Online Softmax
 
-如果我们将上述 Safe Softmax 的三步计算训练循环融合在一个循环中，就可以将全局内存访问次数从 3 次减少到 1 次。遗憾的是，我们不能在同一个循环中融合公式7和8，因为 8 依赖于 $m_{N}$，而 $m_{N}$ 直到第一个循环结束才能确定。
+如果我们将上述 Safe Softmax 的三步计算融合在一个循环中，就可以将全局内存访问次数从 3 次减少到 1 次。遗憾的是，我们不能在同一个循环中融合公式 7 和 8，因为 8 依赖于 $m_{N}$，而 $m_{N}$ 直到第一个循环结束才能确定。
 
 **Online Softmax** 通过动态更新全局统计量，将遍历次数从三轮减至两轮。核心思想是创建替代序列$d_i' = \sum_{j=1}^{i}e^{x_j - m_i}$，建立递推关系：
 $$
@@ -224,13 +224,13 @@ def softmax_online(input_array):
     return output
 ```
 
-Online Softmax在第一轮遍历中同时计算全局最大值$m$和最终分母$d$，第二轮直接计算输出结果。这种在线更新机制为FlashAttention奠定了基础。
+Online Softmax 在第一轮遍历中同时计算全局最大值$m$和最终分母$d$，第二轮直接计算输出结果。这种在线更新机制为 FlashAttention 奠定了基础。
 
 ## 5. FlashAttention：单轮遍历的突破
 
 ### 5.1 核心思想
 
-虽然Online Softmax仍需两轮遍历，但在自注意力计算中，我们的最终目标是获得输出矩阵$O = AV$，而非注意力分数矩阵$A$本身。这启发我们寻找输出矩阵$O$的单轮遍历递推形式。
+虽然 Online Softmax 仍需两轮遍历，但在自注意力计算中，我们的最终目标是获得输出矩阵$O = AV$，而非注意力分数矩阵$A$本身。这启发我们寻找输出矩阵$O$的单轮遍历递推形式。
 
 ### 5.2 递推公式推导
 
@@ -299,7 +299,7 @@ $$
 3. $d_i' = d_{i-1}'e^{m_{i-1} - m_i} + e^{x_i - m_i}$
 4. $o_i' = o_{i-1}' \frac{d_{i-1}'e^{m_{i-1} - m_i} }{d_i'} + \frac{e^{x_i - m_i} }{d_i'} V[i,:]$
 
-最终$O[k,:] = o_N'$。状态变量$x_i, m_i, d_i', o_i'$占用内存极小，可轻松放入GPU共享内存。
+最终$O[k,:] = o_N'$。状态变量$x_i, m_i, d_i', o_i'$占用内存极小，可轻松放入 GPU 共享内存。
 
 ### 5.3 分块版FlashAttention
 
@@ -371,20 +371,20 @@ def flash_attention(Q, K, V, k):
     return o_i_minus_1  # 返回o'_N作为结果
 ```
 
-FlashAttention通过在线融合机制，将原本至少3遍的注意力计算降至**1遍**，在GPU片上内存中完成计算，避免序列长度二次方的内存开销。
+FlashAttention 通过在线融合机制，将原本至少 3 遍的注意力计算降至**1 遍**，在 GPU 片上内存中完成计算，避免序列长度二次方的内存开销。
 
 ## 6. 技术优势分析
 
 ### 6.1 内存效率提升
 
-FlashAttention避免了存储巨大的中间注意力矩阵（如$N \times N$注意力分数矩阵），显著降低显存带宽消耗，使在有限显存下处理超长序列（如100k+上下文）成为可能。
+FlashAttention 避免了存储巨大的中间注意力矩阵（如$N \times N$注意力分数矩阵），显著降低显存带宽消耗，使在有限显存下处理超长序列（如 100k+ 上下文）成为可能。
 
 ### 6.2 计算性能优化
 
-通过将$QK^T$乘法、Softmax和$V$乘法三个步骤融合为单一CUDA kernel，FlashAttention实现了：
+通过将$QK^T$乘法、Softmax 和$V$乘法三个步骤融合为单一 CUDA Kernel，FlashAttention 实现了：
 - 内存访问次数大幅减少
 - 计算与内存访问重叠
-- 更好的GPU资源利用率
+- 更好的 GPU 资源利用率
 
 ## 7. 总结与展望
 
@@ -396,7 +396,7 @@ FlashAttention避免了存储巨大的中间注意力矩阵（如$N \times N$注
 
 ### 7.2 应用价值
 
-FlashAttention的创新不仅提升了Transformer的训练和推理速度，更重要的是为处理超长序列提供了可行的技术方案，推动了长上下文理解、文档处理等领域的发展。
+FlashAttention 的创新不仅提升了 Transformer 的训练和推理速度，更重要的是为处理超长序列提供了可行的技术方案，推动了长上下文理解、文档处理等领域的发展。
 
 ## **参考文献**：
 

@@ -11,7 +11,7 @@
 - [Prefill-Decode-Disaggregation 机制详解](/inference/Prefill-decode-disaggregation)
 
 
-## VLLM
+## vLLM
 
 - [PagedAttention 原理详解](/inference/vllm/PageAttention)
 - [vLLM 设计文档](/inference/vllm/vllm设计文档)

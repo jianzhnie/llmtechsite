@@ -18,10 +18,10 @@
 --device cuda  # 设备类型（GPU/CPU）
 --tp 4         # 张量并行度
 --dp-size 2    # 数据并行度
---ep-size 1    # 专家并行度（MoE模型专用）
+--ep-size 1    # 专家并行度（MoE 模型专用）
 ```
 
-- **配置建议**：8卡服务器推荐`--tp 4 --dp-size 2`，显存不足时优先降低`--tp`值。
+- **配置建议**：8 卡服务器推荐 `--tp 4 --dp-size 2`，显存不足时优先降低 `--tp` 值。
 
 ## 关键性能参数优化
 
@@ -30,23 +30,23 @@
 ```
 --mem-fraction-static 0.85  # 静态显存分配比例
 --kv-cache-dtype auto       # 键值缓存数据类型（fp16/bf16/auto）
---max-total-tokens 128000   # 最大上下文总token数
+--max-total-tokens 128000   # 最大上下文总 Token 数
 ```
 
 - 优化策略：显存不足时，按优先级调整参数：
-  1. 降低`--max-total-tokens`至102400
-  2. 启用量化`--quantization fp8`
-  3. 减少`--mem-fraction-static`至0.8
+  1. 降低 `--max-total-tokens` 至 102400
+  2. 启用量化 `--quantization fp8`
+  3. 减少 `--mem-fraction-static` 至 0.8
 
 ### 请求处理控制
 
 ```
 --max-running-requests 16      # 并发请求上限
---max-prefill-tokens 8192      # 首轮生成最大token数
+--max-prefill-tokens 8192      # 首轮生成最大 Token 数
 --chunked-prefill-size 2048    # 分块预填充大小
 ```
 
-- **高并发场景**：增加`--max-running-requests`至32，同时监控GPU利用率（目标值70%-90%）。
+- **高并发场景**：增加 `--max-running-requests` 至 32，同时监控 GPU 利用率（目标值 70%-90%）。
 
 ## 生产环境优化方案
 
@@ -59,16 +59,16 @@
 ```
 
 - 多机部署要求
-  - 网络延迟<1ms
-  - 防火墙开放29500端口
-  - 使用`--nnodes 3 --node-rank 0`指定节点角色
+  - 网络延迟 <1ms
+  - 防火墙开放 29500 端口
+  - 使用 `--nnodes 3 --node-rank 0` 指定节点角色
 
 ### 量化与推理加速
 
 ```
---quantization fp8                  # 启用FP8量化
+--quantization fp8                  # 启用 FP8 量化
 --attention-backend flashinfer      # 优化注意力计算
---triton-attention-num-kv-splits 4  # Triton注意力KV分割数
+--triton-attention-num-kv-splits 4  # Triton 注意力 KV 分割数
 ```
 
 - 量化效果：
@@ -84,20 +84,20 @@
 
 ```
 --log-level info                  # 日志级别
---enable-metrics true             # 启用Prometheus指标
+--enable-metrics true             # 启用 Prometheus 指标
 --metrics-port 8008               # 指标暴露端口
 ```
 
 - 关键监控指标：
   - `sglang_requests_total`：请求总数
-  - `sglang_gpu_utilization`：GPU利用率
-  - `sglang_kv_cache_usage`：KV缓存使用率
+  - `sglang_gpu_utilization`：GPU 利用率
+  - `sglang_kv_cache_usage`：KV 缓存使用率
 
 ### 调试工具
 
 ```
 --debug-tensor-dump-output-folder /tmp/debug     # 张量转储目录
---enable-nan-detection true                      # 检测NaN值
+--enable-nan-detection true                      # 检测 NaN 值
 --warmups 3                                      # 预热请求数
 ```
 
@@ -126,16 +126,16 @@ python3 -m sglang.launch_server \
 
 ## 常见问题解决方案
 
-### OOM错误处理
+### OOM 错误处理
 
-| 错误类型 | 解决方案                          |
-| :------- | :-------------------------------- |
-| 显存溢出 | 降低`--mem-fraction-static`至0.75 |
-| 内存不足 | 减少`--max-total-tokens`至96000   |
-| KV缓存满 | 增加`--kv-cache-size`参数         |
+| 错误类型 | 解决方案                            |
+| :------- | :---------------------------------- |
+| 显存溢出 | 降低 `--mem-fraction-static` 至 0.75 |
+| 内存不足 | 减少 `--max-total-tokens` 至 96000   |
+| KV 缓存满 | 增加 `--kv-cache-size` 参数         |
 
 ### 多节点同步失败
 
-1. 检查`--dist-init-addr`网络可达性
+1. 检查 `--dist-init-addr` 网络可达性
 2. 验证防火墙规则：`sudo ufw allow 29500`
-3. 使用`--nnodes`和`--node-rank`明确节点角色
+3. 使用 `--nnodes` 和 `--node-rank` 明确节点角色

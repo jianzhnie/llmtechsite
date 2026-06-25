@@ -95,8 +95,8 @@ vLLM 在 Ascend 上的图模式实现主要依赖于 `ACLGraphWrapper`。
 ## 5. 快速上手 (How to use)
 
 在 vLLM Ascend 的 V1 Engine 中，**ACL Graph 默认开启**。
-检查项:
-确保您的配置中 未设置 enforce_eager=True。
+
+**检查项：** 确保您的配置中未设置 `enforce_eager=True`。
 
 ```Bash
 # 示例：确保未强制开启 Eager 模式

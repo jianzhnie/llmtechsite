@@ -71,7 +71,7 @@ llm = LLM(
 > **注意：** 在 vLLM V1 版本中，分块预填充**始终默认启用**，无需显式设置。
 
 ```Python
-# VLLM V1 中默认启用，但仍可通过参数配置
+# vLLM V1 中默认启用，但仍可通过参数配置
 llm = LLM(
     model='lmsys/longchat-13b-16k',
     enable_chunked_prefill=True

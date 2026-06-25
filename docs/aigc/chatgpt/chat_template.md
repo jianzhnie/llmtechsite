@@ -2,9 +2,9 @@
 
 大语言模型（LLMs）日益常见的应用场景是**聊天对话**。在聊天场景中，模型不再是延续单个文本字符串（如标准语言模型那样），而是延续由多条**消息**组成的对话。每条消息都包含一个**角色**（如"user"或"assistant"）和消息内容。
 
-与分词处理类似，不同模型对聊天输入的格式要求差异很大。为此我们引入了**聊天模板**功能。聊天模板是纯文本LLMs分词器或多模态LLMs处理器的组成部分，它指定了如何将对话（表示为消息列表）转换为符合模型预期的单个可分词字符串。
+与分词处理类似，不同模型对聊天输入的格式要求差异很大。为此我们引入了**聊天模板**功能。聊天模板是纯文本 LLMs 分词器或多模态 LLMs 处理器的组成部分，它指定了如何将对话（表示为消息列表）转换为符合模型预期的单个可分词字符串。
 
-本页将重点介绍纯文本LLMs的聊天模板基础用法。关于多模态模型的详细指南，我们准备了专门的[多模态模型文档](./chat_template_multimodal)，涵盖如何在模板中处理图像、视频和音频输入。
+本页将重点介绍纯文本 LLMs 的聊天模板基础用法。关于多模态模型的详细指南，我们准备了专门的[多模态模型文档](./chat_template_multimodal)，涵盖如何在模板中处理图像、视频和音频输入。
 
 让我们通过`mistralai/Mistral-7B-Instruct-v0.1`模型的示例来具体说明：
 
@@ -22,7 +22,7 @@
 "&lt;&lt;&lt;<s>&gt;&gt;&gt;[INST] Hello, how are you? [/INST]I'm doing great. How can I help you today?&lt;&lt;&lt;</s>&gt;&gt;&gt; [INST] I'd like to show off how chat templating works! [/INST]"
 ```
 
-注意分词器如何添加控制标记[INST]和[/INST]来标识用户消息的起止（但不用于assistant消息），并将整个对话合并为单个字符串。若使用默认的`tokenize=True`，该字符串还会被自动分词。
+注意分词器如何添加控制标记[INST]和[/INST]来标识用户消息的起止（但不用于 assistant 消息），并将整个对话合并为单个字符串。若使用默认的`tokenize=True`，该字符串还会被自动分词。
 
 现在尝试将模型替换为`HuggingFaceH4/zephyr-7b-beta`，会得到：
 
@@ -35,22 +35,22 @@ I'm doing great. How can I help you today?&lt;&lt;&lt;</s>&gt;&gt;&gt;
 I'd like to show off how chat templating works!&lt;&lt;&lt;</s>&gt;&gt;&gt;
 ```
 
-Zephyr和Mistral-Instruct都基于同一基础模型`Mistral-7B-v0.1`微调，但使用了完全不同的聊天格式。没有聊天模板时，您需要为每个模型编写手动格式化代码，而细微的格式错误就可能影响性能！聊天模板帮您处理格式化细节，让您可以编写适用于任何模型的通用代码。
+Zephyr 和 Mistral-Instruct 都基于同一基础模型`Mistral-7B-v0.1`微调，但使用了完全不同的聊天格式。没有聊天模板时，您需要为每个模型编写手动格式化代码，而细微的格式错误就可能影响性能！聊天模板帮您处理格式化细节，让您可以编写适用于任何模型的通用代码。
 
 ## 如何使用聊天模板？
 
 如示例所示，使用聊天模板非常简单。只需构建包含`role`和`content`键的消息列表，然后根据模型类型调用分词器的[`~PreTrainedTokenizer.apply_chat_template`]方法或处理器的[`~ProcessorMixin.apply_chat_template`]方法。当使用聊天模板作为模型生成输入时，建议设置`add_generation_prompt=True`来添加[生成提示](#什么是生成提示)。
 
-### **纯文本LLMs与聊天模板的适配**
+### **纯文本 LLMs 与聊天模板的适配**
 
-以下是使用Zephyr准备模型生成输入的示例：
+以下是使用 Zephyr 准备模型生成输入的示例：
 
 ```python
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 checkpoint = "HuggingFaceH4/zephyr-7b-beta"
 tokenizer = AutoTokenizer.from_pretrained(checkpoint)
-model = AutoModelForCausalLM.from_pretrained(checkpoint)  # 建议使用bfloat16精度并转移到GPU
+model = AutoModelForCausalLM.from_pretrained(checkpoint)  # 建议使用 bfloat16 精度并转移到 GPU
 
 messages = [
     {
@@ -62,7 +62,7 @@ messages = [
 tokenized_chat = tokenizer.apply_chat_template(messages, tokenize=True, add_generation_prompt=True, return_tensors="pt")
 print(tokenizer.decode(tokenized_chat[0]))
 ```
-输出符合Zephyr预期的格式：
+输出符合 Zephyr 预期的格式：
 ```python
 <|system|>
 You are a friendly chatbot who always responds in the style of a pirate&lt;&lt;&lt;</s>&gt;&gt;&gt;
@@ -90,7 +90,7 @@ Matey, I'm afraid I must inform ye that humans cannot eat helicopters. Helicopte
 
 看，使用模板后生成响应变得非常简单！
 
-### **多模态 LLMs与聊天模板的适配**
+### **多模态 LLMs 与聊天模板的适配**
 
 对于像 [LLaVA](https://huggingface.co/llava-hf) 这样的多模态 LLMs，提示可以以类似的方式格式化。唯一的区别是你需要同时传递输入图像/视频以及文本。每个 `"content"` 必须是一个包含文本或图像/视频的列表。
 
@@ -121,7 +121,7 @@ processed_chat = processor.apply_chat_template(messages, tokenize=True, add_gene
 print(processor.batch_decode(processed_chat["input_ids"][:, :30]))
 ```
 
-该代码会生成符合LLaVA预期输入格式的字符串。`processed_chat` 可以进一步传递给 [generate()](https://huggingface.co/docs/transformers/main/en/main_classes/text_generation#transformers.GenerationMixin.generate) 以生成文本。
+该代码会生成符合 LLaVA 预期输入格式的字符串。`processed_chat` 可以进一步传递给 [generate()](https://huggingface.co/docs/transformers/main/en/main_classes/text_generation#transformers.GenerationMixin.generate) 以生成文本。
 
 ```python
 '<|im_start|>system
@@ -132,7 +132,7 @@ You are a friendly chatbot who always responds in the style of a pirate<|im_end|
 
 ## 是否有自动化的聊天流程？
 
-是的！我们的text generation pipelines支持聊天输入，可以轻松使用聊天模型。过去我们使用专用的"ConversationalPipeline"类，现其功能已合并到[`TextGenerationPipeline`]。用pipeline重试Zephyr示例：
+是的！我们的 text generation pipelines 支持聊天输入，可以轻松使用聊天模型。过去我们使用专用的"ConversationalPipeline"类，现其功能已合并到[`TextGenerationPipeline`]。用 pipeline 重试 Zephyr 示例：
 
 ```python
 from transformers import pipeline
@@ -145,7 +145,7 @@ messages = [
     },
     {"role": "user", "content": "How many helicopters can a human eat in one sitting?"},
 ]
-print(pipe(messages, max_new_tokens=128)[0]['generated_text'][-1])  # 打印assistant回复
+print(pipe(messages, max_new_tokens=128)[0]['generated_text'][-1])  # 打印 assistant 回复
 ```
 
 输出：
@@ -153,7 +153,7 @@ print(pipe(messages, max_new_tokens=128)[0]['generated_text'][-1])  # 打印assi
 {'role': 'assistant', 'content': "Matey, I'm afraid I must inform ye that humans cannot eat helicopters. Helicopters are not food, they are flying machines. Food is meant to be eaten, like a hearty plate o' grog, a savory bowl o' stew, or a delicious loaf o' bread. But helicopters, they be for transportin' and movin' around, not for eatin'. So, I'd say none, me hearties. None at all."}
 ```
 
-pipeline 会自动处理分词和模板应用，只要模型有聊天模板，初始化pipeline后直接传入消息列表即可！
+pipeline 会自动处理分词和模板应用，只要模型有聊天模板，初始化 pipeline 后直接传入消息列表即可！
 
 ## 什么是"生成提示"？
 
@@ -167,7 +167,7 @@ messages = [
 ]
 ```
 
-不使用生成提示时的ChatML格式：
+不使用生成提示时的 ChatML 格式：
 ```python
 tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=False)
 """<|im_start|>user
@@ -194,7 +194,7 @@ Can I ask a question?<|im_end|>
 
 需要注意的是，这次我们添加了指示模型开始生成回复的特殊标记。这种做法能确保模型在生成文本时，会按照预期输出机器人回复，而不是产生意外行为（例如延续用户消息）。请记住，聊天模型本质上仍是语言模型——它们经过训练是为了延续文本，而对话对它们而言只是特殊形式的文本！必须通过恰当的控制标记进行引导，才能使模型明确当前的任务目标。
 
-并非所有模型都需要生成提示。部分模型（如LLaMA）在机器人回复前没有特殊标记。对于这类模型，`add_generation_prompt` 参数将不会产生任何效果。该参数的具体作用效果取决于实际使用的模板配置。
+并非所有模型都需要生成提示。部分模型（如 LLaMA）在机器人回复前没有特殊标记。对于这类模型，`add_generation_prompt` 参数将不会产生任何效果。该参数的具体作用效果取决于实际使用的模板配置。
 
 
 ## "continue_final_message"的作用？
@@ -211,7 +211,7 @@ formatted_chat = tokenizer.apply_chat_template(chat, tokenize=True, return_dict=
 model.generate(**formatted_chat)
 ```
 
-该模型将生成延续现有JSON字符串的文本，而非创建新消息。当您明确知道希望模型如何开始回复时，这种方法能有效提升模型遵循指令的准确性。
+该模型将生成延续现有 JSON 字符串的文本，而非创建新消息。当您明确知道希望模型如何开始回复时，这种方法能有效提升模型遵循指令的准确性。
 
 注意`add_generation_prompt`和`continue_final_message`不能同时使用。原因是`add_generation_prompt`和`continue_final_message`在输出结构上存在冲突：
 1. **`add_generation_prompt`**：通过添加新消息起始标记（如`"助手："`），强制模型**开启全新回复**，适用于对话式交互场景。

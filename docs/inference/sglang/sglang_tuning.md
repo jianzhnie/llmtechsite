@@ -1,6 +1,6 @@
 # 🚀 SGLang 官方超参数调优指南
 
-在大语言模型（LLM）的离线批处理推理场景中，追求极限的**吞吐量（Throughput）是性能优化的核心目标。实现高吞吐量的最关键因素在于获得并维持一个巨大的有效批处理大小（Effective Batch Size）**。
+在大语言模型（LLM）的离线批处理推理场景中，追求极限的**吞吐量（Throughput）**是性能优化的核心目标。实现高吞吐量的最关键因素在于获得并维持一个巨大的**有效批处理大小（Effective Batch Size）**。
 
 SGLang 提供了精细的参数配置，让开发者能够根据自身硬件和工作负载特性进行深度优化。本指南将基于 SGLang 运行日志中的关键指标，详细阐述如何通过调整核心超参数来最大化离线推理性能。
 
@@ -15,17 +15,17 @@ Decode batch. #running-req: 233, #token: 370959, token usage: 0.82, cuda graph: 
 其中，两个关键指标是：
 
 1. **`#queue-req` (队列请求数)：** 表示当前在调度队列中等待处理的请求数量。
-2. **`token usage` (KV 缓存 Token 利用率)：** 表示服务器 KV 缓存内存的实际利用率， 0.0～1.0之间的⼩数， 1.0表示占满。
+2. **`token usage` (KV 缓存 Token 利用率)：** 表示服务器 KV 缓存内存的实际利用率，0.0～1.0 之间的小数，1.0 表示占满。
 
 此外：
 
-- `#running-req`：正在调度执⾏的请求数。
+- `#running-req`：正在调度执行的请求数。
 
-- `#token`：当前batch⽣成的总token数。
+- `#token`：当前 batch 生成的总 token 数。
 
-- `cuda graph`：是否开启Cuda 计算图
+- `cuda graph`：是否开启 CUDA 计算图。
 
-- `gen throughput (token/s) ` : sglang 平均每秒处理的 token 数
+- `gen throughput (token/s)`：SGLang 平均每秒处理的 Token 数。
 
 
 
@@ -70,7 +70,7 @@ SGLang 的总内存使用包含以下几个主要部分：
 $$
 \text{总显存} = \text{模型权重} + \text{KV 缓存池} + \text{CUDA 图缓冲区} + \text{激活值}
 $$
-参数 --mem-fraction-static 决定了前两项占总 GPU 显存的比例：
+参数 `--mem-fraction-static` 决定了前两项占总 GPU 显存的比例：
 $$
 \text{mem\_fraction\_static} = \frac{\text{模型权重} + \text{KV 缓存池} }{\text{GPU 显存容量} }
 $$
