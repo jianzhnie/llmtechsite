@@ -1,6 +1,6 @@
 
 
-# 从AutoEncoder到 Beta-VAE
+# 从 AutoEncoder 到 Beta-VAE
 
 Autocoder 的发明是为了使用中间有一个 narrow bottleneck layer 的神经网络模型来重建高维数据（不适用于[Variational Autoencoder](https://lilianweng.github.io/posts/2018-08-12-vae/#vae-variational-autoencoder)，将在后面的章节中详细研究它）。一个很好的副产品是降维：bottleneck layer 捕获压缩的latent encoding。这种低维表示可以在各种应用（例如，搜索）中用作嵌入向量，帮助数据压缩，或揭示潜在的数据生成因素。
 

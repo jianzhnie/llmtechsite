@@ -6,7 +6,7 @@
 
 在当前文献中，有几种众所周知的方向，这里只是简要地在高层次上介绍。
 
-生成对抗网络（GANs）以对抗训练的方式学习复杂分布的采样过程，用神经网络直接去拟合真实分布，优化目标是使得真实数据分布与生成数据分布的KL散度达到最小。
+生成对抗网络（GANs）以对抗训练的方式学习复杂分布的采样过程，用神经网络直接去拟合真实分布，优化目标是使得真实数据分布与生成数据分布的 KL 散度达到最小。
 
 另一类被称为“基于似然的”生成模型，寻求学习一个模型，优化的目标是使得样本数据分布出现的概率最大。这包括自回归模型、归一化流模型和变分自编码器（VAEs）。
 
@@ -19,7 +19,7 @@
 对于许多模态，可以认为观察到的数据由一个相关的不可见潜在变量表示或生成，我们可以通过随机变量 $ z$ 来表示。表达这一想法的最好直觉是通过柏拉图的洞穴寓言来理解。在寓言中，一群人一生中都被锁在一个洞穴里，只能看到投射在他们面前墙上的二维阴影，这些阴影是由在火前经过的不可见的三维物体产生的。对于这些人来说，他们观察到的一切都是由他们永远无法看到的更高维度的抽象概念决定的。
 
 <div align=center>
-<img src="https://zh.wikipedia.org/wiki/%E5%9C%B0%E7%A9%B4%E5%AF%93%E8%A8%80#/media/File:An_Illustration_of_The_Allegory_of_the_Cave,_from_Plato%E2%80%99s_Republic.jpg" alt="Untitled" style="zoom：80%;" />
+<img src="https://zh.wikipedia.org/wiki/%E5%9C%B0%E7%A9%B4%E5%AF%93%E8%A8%80#/media/File:An_Illustration_of_The_Allegory_of_the_Cave,_from_Plato%E2%80%99s_Republic.jpg" alt="Untitled" style="zoom:80%;" />
 </div>
 
 > 洞穴寓言故事大致描述，把一群人关起来，如图所示，他们永远只能看岩壁上的二维画面，这个二维画面的影像是外部三维世界的物体经过一个固定的火把后在岩壁上的投影。岩壁上二维的画面显然是由外部三维实体决定的。进一步拓展思路，很有可能我们在现实世界中观察到的很多现象（数据）是从更高维度投影过来。
@@ -104,9 +104,9 @@ $$
 \end{align}
 $$
 
-> KL散度：
+> KL 散度：
 >
-> KL散度也称为相对熵（Relative Entropy），是衡量两个概率分布差异的一种方法。它是两个概率分布 P 和 Q 之间的非对称距离度量，定义为：$D_{KL}(P||Q)=\sum_xP(x)\log\left(\frac{P(x)}{Q(x)}\right)$，其中，P 是数据的真实分布，而 Q  是模型或估计分布。KL散度的值总是非负的，当且仅当 P 和 Q 完全相同时，KL散度为零。
+> KL 散度也称为相对熵（Relative Entropy），是衡量两个概率分布差异的一种方法。它是两个概率分布 P 和 Q 之间的非对称距离度量，定义为：$D_{KL}(P||Q)=\sum_xP(x)\log\left(\frac{P(x)}{Q(x)}\right)$，其中，P 是数据的真实分布，而 Q  是模型或估计分布。KL 散度的值总是非负的，当且仅当 P 和 Q 完全相同时，KL 散度为零。
 
 从这个推导中，我们清楚地从方程 (15) 观察到证据等于 证据下界ELBO 加上近似后验 $ q_{\phi}(z|x)$ 和真实后验 $ p(z|x)$ 之间的KL散度。实际上，正是这个KL散度项在第一个推导的方程(8)中通过 Jensen不等式 被神奇地移除了。理解这个项是理解证据下界ELBO 和证据之间关系的关键，也是理解为什么优化ELBO是一个合适的目标的原因。
 
@@ -591,7 +591,7 @@ $$
 <img src="https://calvinyluo.com/assets/images/diffusion/proofs/snr_deriv.svg" alt="使用 SNR 项导出目标" style="zoom:100%;" />
 </div>
 
-回忆一下方程50 ， $q(\boldsymbol{x}_t\mid\boldsymbol{x}_0)$  是一个高斯分布， 形式为 $\mathcal{N}(\boldsymbol{x}_{t} ; \sqrt{\bar\alpha_t}\boldsymbol{x}_0, \left(1 - \bar\alpha_t\right)\textbf{I})$。然后，遵循[信噪比 (SNR)](https：//en.wikipedia.org/wiki/Signal-to-noise_ratio#Alternate_definition)的定义：$\frac{\mu^2}{\sigma^2}$，我们可以将每个时间步 t 的信噪比写为：
+回忆一下方程50 ， $q(\boldsymbol{x}_t\mid\boldsymbol{x}_0)$  是一个高斯分布， 形式为 $\mathcal{N}(\boldsymbol{x}_{t} ; \sqrt{\bar\alpha_t}\boldsymbol{x}_0, \left(1 - \bar\alpha_t\right)\textbf{I})$。然后，遵循[信噪比 (SNR)](https://en.wikipedia.org/wiki/Signal-to-noise_ratio#Alternate_definition)的定义：$\frac{\mu^2}{\sigma^2}$，我们可以将每个时间步 t 的信噪比写为：
 $$
 \begin{align}
     \text{SNR}(t) &= \frac{\bar\alpha_t}{1 -\bar\alpha_{t} }
@@ -1023,16 +1023,16 @@ $$
 
 ## Reference
 
-- Blogs：
-  - [What are Diffusion Models?](https：//lilianweng.github.io/posts/2021-07-11-diffusion-models/)
-  - [Generative Modeling by Estimating Gradients of the Data Distribution (blog)](https：//yang-song.github.io/blog/2021/score/)
-  - [Guidance： A Cheat Code for Diffusion Models](https：//benanne.github.io/2022/05/26/guidance.html)
-  - [Score based diffusions explained in just one paragraph](https：//kidger.site/thoughts/score-based-diffusions-explained-in-just-one-paragraph/)
-  - [A Path to the VDM Diffusion Loss](https：//blog.alexalemi.com/diffusion.html)
-- Papers：
-  - [Deep Unsupervised Learning using Nonequilibrium Thermodynamics](https：//arxiv.org/abs/1503.03585)
-  - [Denoising Diffusion Probabilistic Models](https：//arxiv.org/abs/2006.11239)
-  - [Generative Modeling by Estimating Gradients of the Data Distribution (paper)](https：//arxiv.org/abs/2006.09011)
-  - [Score-Based Generative Modeling through Stochastic Differential Equations](https：//arxiv.org/abs/2011.13456)
-  - [Diffusion Models Beat GANs on Image Synthesis](https：//arxiv.org/abs/2105.05233)
-  - [Classifier-Free Diffusion Guidanc](https：//arxiv.org/abs/2207.12598)
+- Blogs:
+  - [What are Diffusion Models?](https://lilianweng.github.io/posts/2021-07-11-diffusion-models/)
+  - [Generative Modeling by Estimating Gradients of the Data Distribution (blog)](https://yang-song.github.io/blog/2021/score/)
+  - [Guidance: A Cheat Code for Diffusion Models](https://benanne.github.io/2022/05/26/guidance.html)
+  - [Score based diffusions explained in just one paragraph](https://kidger.site/thoughts/score-based-diffusions-explained-in-just-one-paragraph/)
+  - [A Path to the VDM Diffusion Loss](https://blog.alexalemi.com/diffusion.html)
+- Papers:
+  - [Deep Unsupervised Learning using Nonequilibrium Thermodynamics](https://arxiv.org/abs/1503.03585)
+  - [Denoising Diffusion Probabilistic Models](https://arxiv.org/abs/2006.11239)
+  - [Generative Modeling by Estimating Gradients of the Data Distribution (paper)](https://arxiv.org/abs/2006.09011)
+  - [Score-Based Generative Modeling through Stochastic Differential Equations](https://arxiv.org/abs/2011.13456)
+  - [Diffusion Models Beat GANs on Image Synthesis](https://arxiv.org/abs/2105.05233)
+  - [Classifier-Free Diffusion Guidance](https://arxiv.org/abs/2207.12598)

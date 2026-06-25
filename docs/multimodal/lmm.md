@@ -1,30 +1,30 @@
-#  多模态和多模态模型
+#  多模态与多模态模型
 
-ChatGPT再次让世界惊叹。通过GPT4的最新升级，ChatGPT 将其功能从文本扩展到图像和语音。借助 ChatGPT 的新功能，您可以让您的孩子在不发脾气的情况下完成作业，或者帮助他们轻松地将“超级向日葵刺猬”的想象力转化为富有表现力的图形。ChatGPT的新功能不仅使AI多模态系统的行业应用实现了飞跃，也引发了围绕多模态模型未来的新一波讨论。
+ChatGPT 再次让世界惊叹。通过 GPT-4 的最新升级，ChatGPT 将其功能从文本扩展到图像和语音。借助 ChatGPT 的新功能，您可以让孩子在不发脾气的情况下完成作业，或者帮助他们将"超级向日葵刺猬"的想象力转化为富有表现力的图形。ChatGPT 的新功能不仅使 AI 多模态系统的行业应用实现了飞跃，也引发了围绕多模态模型未来的新一波讨论。
 
 ## 从LLM到LMM
 
 生成式人工智能中的多模态系统或多模态性表示模型产生各种输出的能力，包括文本、图像、音频、视频甚至基于输入的其他模态。这些模型根据特定数据进行训练，学习潜在模态以生成类似的新数据，从而丰富人工智能应用。
 
-并非所有多模态系统都是大型多模态模型 (LMM)。例如，像 Midjourney、Stable Diffusion 和 Dall-E这样的文本到图像模型是多模态的，但不是 LMM，因为它们没有大型语言模型组件。多模态味着以下特点中的一个或多个：
+并非所有多模态系统都是大型多模态模型（LMM）。例如，像 Midjourney、Stable Diffusion 和 DALL·E 这样的文本到图像模型是多模态的，但不是 LMM，因为它们没有大型语言模型组件。多模态意味着以下特点中的一个或多个：
 
 1. 输入和输出属于不同的模态（例如文本到图像，图像到文本）
 2. 输入是多模态的（例如，一个能够同时处理文本和图像的系统）
 3. 输出是多模态的（例如，一个能够生成文本和图像的系统）
 
-LMM 是通过将额外的模态合并到大型语言模型（LLM）中而构成的， 例如 Open AI 新推出的[DALL.E-3 ](https://openai.com/dall-e-3)。虽然 LMM 的表现高度依赖于其基础 LLM 的表现，但随着每种模态的添加，它也增强了其基础 LLM 的表现。
+LMM 是通过将额外的模态合并到大型语言模型（LLM）中而构成的，例如 OpenAI 新推出的 [DALL·E 3](https://openai.com/dall-e-3)。虽然 LMM 的表现高度依赖于其基础 LLM 的表现，但随着每种模态的添加，它也增强了其基础 LLM 的能力。
 
-与仅生成文本的 LMM 相比，LMM 更接近人类的自然智能。我们通过多种方式感知世界，尤其是通过视觉。使用图像作为Prompt可以让用户更轻松地查询和使用模型，而不是在文本中起草出完美的Prompt。
+与仅生成文本的 LLM 相比，LMM 更接近人类的自然智能。我们通过多种方式感知世界，尤其是通过视觉。使用图像作为 Prompt 可以让用户更轻松地查询和使用模型，而不必在文本中起草完美的 Prompt。
 
-事实上，整合多模态模型扩展并丰富了LMM对世界的理解。不同信息格式的融合可以使人工智能系统模仿人类的认知模型，使它们能够通过多种感官而不是单纯的语言来理解世界，从而减少幻觉，提高推理能力和持续学习能力。
+事实上，整合多模态模型扩展并丰富了 LMM 对世界的理解。不同信息格式的融合可以使人工智能系统模仿人类的认知模型，使它们能够通过多种感官而不是单纯的语言来理解世界，从而减少幻觉，提高推理能力和持续学习能力。
 
-### 科技巨头引领LMM 发展
+### 科技巨头引领 LMM 发展
 
-多模态 ChatGPT 让 OpenAI 更接近通用人工智能 (AGI) 时代，这是 OpenAI 在其网站上提出的终极愿景，也是数十年来 AI 社区的圣杯。正如OpenAI在他们的 [GPT-4V system card](https://cdn.openai.com/papers/GPTV_System_Card.pdf) 中指出，“将额外的模态（例如图像输入）融入到LLMs中被视为人工智能研究和发展的关键前沿。”
+多模态 ChatGPT 让 OpenAI 更接近通用人工智能（AGI）时代，这是 OpenAI 在其网站上提出的终极愿景，也是数十年来 AI 社区的圣杯。正如 OpenAI 在他们的 [GPT-4V system card](https://cdn.openai.com/papers/GPTV_System_Card.pdf) 中指出，"将额外的模态（例如图像输入）融入到 LLM 中被视为人工智能研究和发展的关键前沿。"
 
-OpenAI 并不是唯一一家在多模态人工智能领域占据领先地位的公司。在过去的一年里，每周都有一个主要的研究实验室推出了一个新的LMM，例如DeepMind的Flamingo，Salesforce的BLIP，微软的KOSMOS-1，谷歌的PaLM-E和腾讯的Macaw-LLM。
+OpenAI 并不是唯一一家在多模态人工智能领域占据领先地位的公司。在过去的一年里，每周都有主要研究实验室推出新的 LMM，例如 DeepMind 的 Flamingo、Salesforce 的 BLIP、微软的 KOSMOS-1、Google 的 PaLM-E 和腾讯的 Macaw-LLM。
 
-OpenAI推出GPT-4V系统后，谷歌也顶着压力发布了Gemini，号称是一个从头开始创建的多模态系统。据说Gemini 接受训练的Token数量是 GPT4 两倍，在从大量专有数据中获得的见解和推论的复杂性方面具有明显的优势。同样，Meta 最近推出的[SeamlessM4T](https://aibusiness.com/nlp/meta-s-seamlessm4t-ai-model-translates-voice-text-into-100-languages)、[AudioCraft](https://aibusiness.com/nlp/meta-open-sources-audiocraft-its-text-to-audio-or-music-models)和[CM3leon](https://economictimes.indiatimes.com/tech/technology/meta-introduces-generative-ai-model-cm3leon-for-text-images/articleshow/101805639.cms?from=mdr)系列都表明了其在多模态 AI 进步方面与 OpenAI 和 Google 竞争的决心。
+OpenAI 推出 GPT-4V 系统后，Google 也顶着压力发布了 Gemini，号称是一个从头开始创建的多模态系统。据说 Gemini 接受训练的 Token 数量是 GPT-4 的两倍，在从大量专有数据中获得的见解和推论的复杂性方面具有明显优势。同样，Meta 最近推出的 [SeamlessM4T](https://aibusiness.com/nlp/meta-s-seamlessm4t-ai-model-translates-voice-text-into-100-languages)、[AudioCraft](https://aibusiness.com/nlp/meta-open-sources-audiocraft-its-text-to-audio-or-music-models) 和 [CM3leon](https://economictimes.indiatimes.com/tech/technology/meta-introduces-generative-ai-model-cm3leon-for-text-images/articleshow/101805639.cms?from=mdr) 系列都表明了其在多模态 AI 进步方面与 OpenAI 和 Google 竞争的决心。
 
 ### LLM 内容总览
 

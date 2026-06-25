@@ -1,19 +1,19 @@
 # PyTorch 分布式与并行训练：深度解析
 
-PyTorch 的分布式计算能力核心在于 `torch.distributed` 包，其底层基于 **Collective Communication (c10d) 库**实现了高效的跨进程张量通信。本文将重点对 **分布式数据并行训练 (DDP)** 的通信机制、环境配置、核心概念以及底层通信原语进行深入剖析，以确保读者能够专业、高效地应用 PyTorch 进行大规模 AI 模型训练。
+PyTorch 的分布式计算能力核心在于 `torch.distributed` 包，其底层基于 **Collective Communication（c10d）库**实现高效的跨进程张量通信。本文将深入剖析**分布式数据并行训练（DDP）**的通信机制、环境配置、核心概念及底层通信原语，帮助读者高效地应用 PyTorch 进行大规模模型训练。
 
 ## 核心通信机制
 
 PyTorch 的分布式通信主要依赖 `torch.distributed` 包，它支持以下两种通信 API：
 
-- **集合通信 (Collective Communication APIs)**：用于所有进程之间进行协调和数据交换，是 **分布式数据并行训练 (Distributed Data-Parallel, DDP)** 的核心支撑。
-- **点对点通信 (P2P Communication APIs)**：用于两个指定进程之间进行直接数据传输，是 **基于 RPC 的分布式训练 (RPC-Based Distributed Training)** 的基础。
+- **集合通信（Collective Communication APIs）**：用于所有进程之间进行协调和数据交换，是**分布式数据并行训练（Distributed Data-Parallel，DDP）**的核心支撑。
+- **点对点通信（P2P Communication APIs）**：用于两个指定进程之间进行直接数据传输，是**基于 RPC 的分布式训练（RPC-Based Distributed Training）**的基础。
 
-本教程将侧重于**分布式数据并行训练 (DDP)** 的通信机制和 API 使用。
+本教程将侧重于**分布式数据并行训练（DDP）**的通信机制和 API 使用。
 
 ## 1. 分布式训练基础模板
 
-`torch.distributed` 包通过**消息传递语义**（Message Passing Semantics）使研究人员和开发者能够将计算任务轻松并行化到多个进程，无论是单机多卡还是多机集群环境。这与仅支持单机多进程的 `torch.multiprocessing` 包有本质区别。分布式包支持跨机器通信，并且可支持多种通信后端。
+`torch.distributed` 包通过**消息传递语义**（Message Passing Semantics）将计算任务并行化到多个进程，支持单机多卡和多机集群环境。这与仅支持单机多进程的 `torch.multiprocessing` 包有本质区别——分布式包支持跨机器通信，并可选择多种通信后端。
 
 ### 1.1 单节点多进程训练模板
 

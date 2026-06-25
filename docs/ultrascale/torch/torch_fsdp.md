@@ -1,10 +1,10 @@
 # FSDP 深度解析
 
-ChatGPT 掀起的大模型训练浪潮让不少同学都对训练大模型跃跃欲试。在找训练 baseline 的时候肯定发现大模型训练的 codebase 更倾向于用 [DeepSpeed](https://www.deepspeed.ai/)、ColossalAI 等大模型训练框架，而鲜有问津 PyTorch 原生的 [FSDP](https://pytorch.org/blog/introducing-pytorch-fully-sharded-data-parallel-api/)（FullyShardedDataParallel）。这到底是为啥嘞？是 FSDP 不够节省显存？训练速度太慢？还是说不好用？请耐心看完这篇文章，相信一定会有所收获。
+ChatGPT 掀起的大模型训练浪潮让不少同学都对训练大模型跃跃欲试。在寻找训练 baseline 的时候，大家肯定发现大模型训练的 codebase 更倾向于使用 [DeepSpeed](https://www.deepspeed.ai/)、ColossalAI 等大模型训练框架，而鲜有问津 PyTorch 原生的 [FSDP](https://pytorch.org/blog/introducing-pytorch-fully-sharded-data-parallel-api/)（FullyShardedDataParallel）。这到底是为什么？是 FSDP 不够节省显存？训练速度太慢？还是不好用？请耐心看完这篇文章，相信一定会有所收获。
 
 ## FSDP 的前生今世
 
-FSDP 的实现借鉴了 [FairScale](https://fairscale.readthedocs.io/en/latest/)。PyTorch 在开发大型特性时一般会新建一个库来做一些验证性的支持，并收集用户反馈，FairScale、[Dynamo](https://github.com/pytorch/torchdynamo)（PyTorch 2.0 的基石）、[torchdistx](https://github.com/pytorch/torchdistx) 均是如此。等到特性日益成熟后，（也许）就会合入到 PyTorch。相比于 PyTorch 官方在 Tutorial 里对 FSDP 简短的介绍，FairScale 显然做得更好。在正式开始介绍之前，贴一张 FairScale 的介绍，大家不妨思考一下，你真的需要 FSDP 么（其他大规模训练框架亦是如此）
+FSDP 的实现借鉴了 [FairScale](https://fairscale.readthedocs.io/en/latest/)。PyTorch 在开发大型特性时，一般会新建一个库做验证性支持并收集用户反馈，FairScale、[Dynamo](https://github.com/pytorch/torchdynamo)（PyTorch 2.0 的基石）、[torchdistx](https://github.com/pytorch/torchdistx) 均是如此。等到特性日益成熟后，就会合入 PyTorch 主库。相比于 PyTorch 官方 Tutorial 对 FSDP 的简短介绍，FairScale 的文档显然做得更好。在正式开始介绍之前，贴一张 FairScale 的介绍图，大家不妨思考一下：你真的需要 FSDP 么？（其他大规模训练框架亦是如此）
 
 <img src="https://pica.zhimg.com/v2-acfd739b024f50ca3ec0e3817e6977f2_1440w.jpg" alt="img" style="zoom:120%;" />
 
@@ -14,28 +14,28 @@ FSDP 的实现借鉴了 [FairScale](https://fairscale.readthedocs.io/en/latest/)
 
 <img src="https://pic2.zhimg.com/v2-8615b71ff7fa56574922b29b821b1979_1440w.jpg" alt="img" style="zoom:120%;" />
 
-模型训练的时候，显存占用大体可以分成三部分，即激活值、**模型权重、模型梯度和优化器状态**。对于视觉模型而言，显存占比最大的是激活值，因此使用混合精度训练能够大幅度地降低激活值的显存占用（fp16）。然而对于大语言模型或者多模态模型而言，优化后三者的显存占用则显得更重要。
+模型训练时，显存占用大体可分为三部分：激活值、**模型权重、模型梯度和优化器状态**。对于视觉模型而言，显存占比最大的是激活值，因此混合精度训练能够大幅降低激活值的显存占用（fp16）。然而对于大语言模型或多模态模型而言，优化后三者的显存占用则更为重要。
 
-以 PyTorch 为例，当你使用 `DistributedDataParallel` 时，其实会在每个进程为模型参数、模型梯度、优化器状态分配内存，并在训练过程中同步地更新这些数据。这样的做法虽然能够通过数据并行达到加速训练的目的，但是它在显存分配上的策略显然是非常糟糕的。既然每个进程的参数都是一样的，为什么每个进程还需要保存完整的参数呢？所以 ZeRO 就主张每个进程只保存参数的一部分，用到的时候再 All-Gather 到各个进程。ZeRO 有三个阶段的优化策略，即：
+以 PyTorch 为例，当你使用 `DistributedDataParallel` 时，每个进程都会为模型参数、模型梯度、优化器状态分配内存，并在训练过程中同步更新这些数据。这种做法虽然通过数据并行达到了加速训练的目的，但显存分配策略显然不够高效。既然每个进程的参数都一样，为什么还需要保存完整的参数？ZeRO 的核心思想就是让每个进程只保存参数的一部分，需要时再通过 All-Gather 聚合到各进程。ZeRO 有三个阶段的优化策略：
 
 - ZeRO1：只把优化器状态进行分片
 - ZeRO2：对优化器状态 + 梯度进行分片
 - ZeRO3：对优化器状态 + 梯度 + 模型参数进行分片
 
 
-以 7.5 B （φ）参数量的模型为例，先简单计算一下模型参数、模型梯度、优化器状态的显存占用情况：
+以 7.5B（φ）参数量的模型为例，先简单计算一下模型参数、模型梯度、优化器状态的显存占用情况：
 
 - **fp32 训练：**
-  模型参数量为 φ，其梯度也为 φ，在使用 Adam 的情况下，优化器状态为 2φ。如果是普通的 fp32 训练，那么实际占用的内存就是 $(1 + 1 + 2)\varphi \times 4 = 16\varphi$ 字节（4 为 fp32 数据占据的内存大小）；
+  模型参数量为 φ，其梯度也为 φ，使用 Adam 时优化器状态为 2φ。普通 fp32 训练实际占用的内存为 $(1 + 1 + 2)\varphi \times 4 = 16\varphi$ 字节（4 为 fp32 数据占据的字节数）；
 
 - **fp16 训练：**
-  如果开启混合精度训练，为了保证参数更新的精度，优化器状态需要维持在 fp32，此外还需要额外保存一份 fp32 模型参数的拷贝，因此显存占用为 2φ（模型参数）+ 2φ（模型梯度）+ 8φ（优化器状态）+ 4φ（模型参数 fp32 拷贝，DeepSpeed 实现存储在优化器）：16φ 字节。
+  开启混合精度训练时，为保证参数更新精度，优化器状态需维持 fp32，此外还需额外保存一份 fp32 模型参数拷贝。因此显存占用为：2φ（模型参数）+ 2φ（模型梯度）+ 8φ（优化器状态）+ 4φ（fp32 参数拷贝，DeepSpeed 实现中存储在优化器）= 16φ 字节。
 
-带入这样的视角，相信就能理解为什么上图中 7.5B 的模型显存占用可以高达 120GB，以及 ZeRO 系列为何如此有效。
+带入这样的视角，就能理解为什么上图中 7.5B 的模型显存占用可以高达 120GB，以及 ZeRO 系列为何如此有效。
 
 ## **FSDP - ZeRO3?**
 
-言归正传，FairScale 说 FSDP 相当于 ZeRO3 的优化，那我们不妨通过一个简单的例子，来感受一下（例子中优化器选择 SGD，因为 PyTorch 的 Adam 做了非常多的优化，其显存实际占用会明显高于理论）。在正式测试之前，我们先来看一下单卡 fp32 训练、单卡 fp16 训练、DDP fp16 训练的测试：
+言归正传，FairScale 说 FSDP 相当于 ZeRO3 的优化，那我们不妨通过一个简单的例子来感受一下（例子中优化器选择 SGD，因为 PyTorch 的 Adam 做了大量优化，实际显存占用会明显高于理论值）。在正式测试之前，先来看一下单卡 fp32 训练、单卡 fp16 训练、DDP fp16 训练的测试：
 
 ###  单卡 **fp16 + fp32**
 
@@ -82,13 +82,15 @@ def test_fp16():
 
 
 跑过代码后发现，显存占用如下：
-fp32: **12.035G**
-fp16: **14.035G**
+fp32：**12.035G**
+fp16：**14.035G**
 
-啥？amp 显存占用还多了 2G？这是咋算的？这里就不得不提到 amp 的实现方式了。PyTorch 的 amp 不会改变模型权重的类型，即仍然以 fp32 存储，而选择在**[白名单](https://pytorch.org/docs/stable/amp.html%23cuda-ops-that-can-autocast-to-float16)**算子的 forward backward 前后，把 fp32 的 weights 转换成 fp16，以计算出 fp16 的激活值和 fp16 的梯度，其中 fp16 的梯度还会进一步转换成 fp32，以保证参数更新的精度。但是既然权重和梯度仍然保留 fp32，优化器状态也理应保持不变，那为啥还多了 2G？原因在于 forward 和 backward 这份 fp16 的权重被缓存了，**这部分实现在 amp 的 C++ 代码里**。缓存的 fp16 梯度，就是多出来 2G  的源头。
+amp 显存占用竟然多了 2G？这是怎么算的？这里就不得不提到 amp 的实现方式了。PyTorch 的 amp 不会改变模型权重的类型，仍然以 fp32 存储。它选择在**[白名单](https://pytorch.org/docs/stable/amp.html%23cuda-ops-that-can-autocast-to-float16)**算子的 forward/backward 前后，把 fp32 的 weights 转换成 fp16，以计算出 fp16 的激活值和梯度。其中 fp16 的梯度还会进一步转换成 fp32，以保证参数更新精度。
+
+既然权重和梯度仍然保留 fp32，优化器状态也理应保持不变，那为什么还多了 2G？原因在于 forward 和 backward 时这份 fp16 的权重被缓存了，**这部分实现在 amp 的 C++ 代码里**。缓存的 fp16 权重就是多出 2G 的源头。
 
 
-要想节省这部分参数，需要给 autocast 传入 `cache_enabled=False`，
+要想节省这部分显存，需要给 `autocast` 传入 `cache_enabled=False`：
 
 ```python
 def test_fp16():
@@ -107,11 +109,11 @@ def test_fp16():
         print(f'memory allocated: {memory / 1e9:.3f}G')
 ```
 
-这样一来，显存消耗为 **12.235G**，基本和 fp32 一致，也符合预期。
+这样一来，显存消耗为 **12.235G**，基本和 fp32 一致，符合预期。
 
 ###  **DDP 训练**
 
-DDP 只是在每个进程创建模型，更新模型而已，显存占用应该还是 12G 吧？
+DDP 只是在每个进程创建模型并更新模型而已，显存占用应该还是 12G 吧？
 
 ```python
 def _test_ddp_fp16():
@@ -135,11 +137,11 @@ def _test_ddp_fp16():
 然而结果是：
 **16.036G**
 
-原理也很简单，DDP 执行 gradient computation 和 gradient synchronization 时需要有一个桶（bucket，具体介绍见[之前的 DDP 介绍](https://zhuanlan.zhihu.com/p/343951042)）。桶会保留一份 gradient 的拷贝，因此会额外消耗 4G 左右的显存。
+原理也很简单：DDP 执行 gradient computation 和 gradient synchronization 时需要一个桶（bucket，具体介绍见[之前的 DDP 介绍](https://zhuanlan.zhihu.com/p/343951042)）。桶会保留一份 gradient 的拷贝，因此会额外消耗 4G 左右的显存。
 
 ### **FSDP 训练**
 
-我们在使用 FSDP 时，需要通过配置 `auto_wrap_policy` 参数来选择模型分片策略，不然显存优化只能达到 ZeRO-stage1 的水准。如何配置 auto_wrap_policy 以及其对应的原理会在后面的章节具体介绍。
+我们在使用 FSDP 时，需要通过配置 `auto_wrap_policy` 参数来选择模型分片策略，否则显存优化只能达到 ZeRO-stage1 的水准。如何配置 `auto_wrap_policy` 以及对应的原理会在后面章节具体介绍。
 
 ```python
 from torch.distributed.fsdp.wrap import _module_wrap_policy
@@ -167,7 +169,7 @@ def _test_fsdp_fp16():
 
 结果是 1.524G，显存占用基本等价于 ZeRO3 的优化效果。
 
-之所以做了这些内存占用分析，是希望大家从 DDP 切换到 FSDP 时，能够理性地看待显存优化。
+之所以做这些内存占用分析，是希望大家从 DDP 切换到 FSDP 时，能够理性看待显存优化的效果。
 
 ## FSDP 分片策略
 
