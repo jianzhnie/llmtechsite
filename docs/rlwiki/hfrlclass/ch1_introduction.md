@@ -5,7 +5,7 @@
 深度强化学习是一种让机器通过尝试和学习来掌握如何做出最好决策的方法。简单来说，它教会机器通过实践来学习和提高。
 
 
-自 2013 年 [Deep Q-Learning](https://www.cs.toronto.edu/~vmnih/docs/dqn.pdf) 论文以来，已经看到了很多突破。从[击败世界上最优秀的 Dota2 玩家的OpenAI  5](https://www.twitch.tv/videos/293517383) 到 [Dexterity 项目 ](https://openai.com/blog/learning-dexterity/),  我们处在深度强化学习研究的激动人心的时刻。
+自 2013 年 [Deep Q-Learning](https://www.cs.toronto.edu/~vmnih/docs/dqn.pdf) 论文以来，已经看到了很多突破。从[击败世界上最优秀的 Dota2 玩家的 OpenAI Five](https://www.twitch.tv/videos/293517383) 到 [Dexterity 项目](https://openai.com/blog/learning-dexterity/)，我们处在深度强化学习研究的激动人心的时刻。
 
 <div align=center>
 <img width="600" src="https://huggingface.co/blog/assets/63_deep_rl_intro/OpenAIFive.jpg"/>
@@ -20,7 +20,7 @@
 
 要了解强化学习，让我们从大局出发来看。
 
-~~要~~了解强化学习（Reinforcement Learning，RL）， 首先要从宏观角度入手。
+要了解强化学习（Reinforcement Learning，RL），首先要从宏观角度入手。
 
 强化学习背后的想法是，智能体（agent）将通过与环境交互（通过反复试验和试错）并接收奖励（积极或消极）作为执动作的反馈来从环境中学习，并在与环境的交互中不断习得自然经验。
 

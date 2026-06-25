@@ -49,8 +49,8 @@
 - [蒙特卡洛树搜索入门指南](/rlwiki/muzero/mcts_guide)
 - [蒙特卡洛树搜索(MCTS)详解](/rlwiki/muzero/mcts)
 - [AlphaGoZero 算法介绍](/rlwiki/muzero/alphazero)
-- [MuZero算法介绍](/rlwiki/muzero/muzero_intro)
-- [MuZero伪代码](/rlwiki/muzero/muzero_pseudocode)
+- [MuZero 算法介绍](/rlwiki/muzero/muzero_intro)
+- [MuZero 伪代码](/rlwiki/muzero/muzero_pseudocode)
 
 ### 多智能体强化学习
 
