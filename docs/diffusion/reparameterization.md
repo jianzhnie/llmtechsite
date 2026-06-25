@@ -7,13 +7,13 @@ $$
 \begin{equation}L_{\theta}=\mathbb{E}_{z\sim p_{\theta}(z)}[f(z)]\label{eq:base}\end{equation}
 $$
 
-这样的目标在 VAE 中会出现，在文本 GAN 也会出现，在强化学习中也会出现（$f(z)$对应于奖励函数），所以深究下去，我们会经常碰到这样的目标函数。取决于$z$的连续性，它对应不同的形式：
+这样的目标在 VAE 中会出现，在文本 GAN 中也会出现，在强化学习中同样会出现（$f(z)$ 对应于奖励函数）。取决于 $z$ 的连续性，它对应不同的形式：
 $$
 \begin{equation}\int p_{\theta}(z) f(z)dz\,\,\,\text{(连续情形)}\qquad\qquad \sum_{z} p_{\theta}(z) f(z)\,\,\,\text{(离散情形)}\end{equation}
 $$
-当然，离散情况下我们更喜欢将记号$z$换成$y$或者$c$。
+当然，离散情况下我们更喜欢将记号 $z$ 换成 $y$ 或者 $c$。
 
-假设我们需要对 $L_{\theta}$ 求关于 θ 的梯度, 如果函数$f_\theta(z)$  本身关于 $\theta $ 梯度存在，则
+假设我们需要对 $L_{\theta}$ 求关于 $\theta$ 的梯度。如果函数 $f_\theta(z)$ 本身关于 $\theta$ 梯度存在，则
 $$
 \begin{aligned}
 \nabla_\theta \mathbb{E}_{p(z)}\left[f_\theta(z)\right] & =\nabla_\theta\left[\int_z p(z) f_\theta(z) d z\right] \\
@@ -21,7 +21,7 @@ $$
 & =\mathbb{E}_{p(z)}\left[\nabla_\theta f_\theta(z)\right]
 \end{aligned}
 $$
-实际上，上面的推导过程说明了梯度和期望符号可以交换运算顺序。即，期望的梯度等于梯度的期望。那么问题来了：如果密度函数$p$也有参数 $θ$ 呢?. 我们尽力重复上面的步骤：
+实际上，上面的推导说明梯度和期望符号可以交换运算顺序，即期望的梯度等于梯度的期望。那么问题来了：如果密度函数 $p$ 也有参数 $\theta$ 呢？我们尝试重复上面的步骤：
 $$
 \begin{aligned}
 \nabla_\theta \mathbb{E}_{p_\theta(z)}\left[f_\theta(z)\right] & =\nabla_\theta\left[\int_z p_\theta(z) f_\theta(z) d z\right] \\
@@ -32,7 +32,7 @@ $$
 $$
 
 
-由于第一项并不能写作某一个函数关于 $p_\theta(z)$ 的期望，Monte Carlo 方法在这里无法适用——因为其要求我们从 $p_\theta(z)$ 中采样。如果说， $\nabla_\theta p_\theta(z)$ 有解析解，那么一切问题将迎刃而解。但是问题在于，现实生活中$\nabla_\theta p_\theta(z)$ 往往无法写出来。在对于我们所面临的问题有一定认知以后，接下来我们将看看使用重参数化技巧以后，问题会不会有所改善。
+由于第一项不能写作某个函数关于 $p_\theta(z)$ 的期望，Monte Carlo 方法在这里无法适用——因为它要求我们从 $p_\theta(z)$ 中采样。如果 $\nabla_\theta p_\theta(z)$ 有解析解，那么一切问题将迎刃而解。但现实中 $\nabla_\theta p_\theta(z)$ 往往无法写出。了解了问题所在后，接下来我们看看使用重参数化技巧能否有所改善。
 $$
 \begin{aligned}
 \boldsymbol{\epsilon} & \sim p(\boldsymbol{\epsilon}) \\
@@ -43,18 +43,18 @@ $$
 & \approx \frac{1}{L} \sum_{l=1}^L \nabla_\theta f\left(g_\theta\left(\epsilon^{(l)}, \mathbf{x}^{(i)}\right)\right)
 \end{aligned}
 $$
-上述推理是理解 VAE 的关键， 我们使用重新参数化技巧将期望（1）的梯度表示为梯度（5）的期望。如果$g_θ$是可微的，那么我们就可以使用蒙特卡洛方法来估计 $\nabla_\theta \mathbb{E}_{p_{\boldsymbol{\theta} }(\mathbf{z})}\left[f\left(\mathbf{z}^{(i)}\right)\right]$。
+上述推理是理解 VAE 的关键——我们使用重参数化技巧将期望（1）的梯度表示为梯度（5）的期望。如果 $g_\theta$ 是可微的，就可以使用蒙特卡洛方法来估计 $\nabla_\theta \mathbb{E}_{p_{\boldsymbol{\theta} }(\mathbf{z})}\left[f\left(\mathbf{z}^{(i)}\right)\right]$。
 
-为了最小化$L_{\theta}$，我们就需要把$L_{\theta}$明确地写出来，这意味着我们要实现从$p_{\theta}(z)$中采样，而$p_{\theta}(z)$是带有参数$θ$的，如果直接采样的话，那么就失去了$\theta$的信息（梯度），从而无法更新参数$\theta$。而 Reparameterization 则是提供了这样的一种变换，使得我们可以直接从$p_{\theta}(z)$中采样，并且保留$\theta$的梯度。（注：如果考虑最一般的形式，那么$f(z)$也应该带上参数$\theta$，但这没有增加本质难度。）
+为了最小化 $L_{\theta}$，我们需要将其明确写出来，这意味着要从 $p_{\theta}(z)$ 中采样。而 $p_{\theta}(z)$ 带有参数 $\theta$，如果直接采样就会丢失 $\theta$ 的梯度信息，从而无法更新参数。Reparameterization 提供了一种变换，使我们能从 $p_{\theta}(z)$ 中采样的同时保留 $\theta$ 的梯度。（注：如果考虑最一般的形式，$f(z)$ 也应带上参数 $\theta$，但这不增加本质难度。）
 
 ## 连续情形
 
-简单起见，我们先考虑连续情形
+简单起见，我们先考虑连续情形：
 $$
 \begin{equation}L_{\theta}=\int p_{\theta}(z) f(z)dz\label{eq:lianxu}\end{equation}
 $$
 
-其中$p_{\theta}(z)$是具有显式概率密度表达式的分布，在变分自编码器中常见的是正态分布$L_{\theta}=\int p_{\theta}(z) f(z)dz$。
+其中 $p_{\theta}(z)$ 是具有显式概率密度表达式的分布，在变分自编码器中常见的选择是正态分布。
 
 ### 形式
 

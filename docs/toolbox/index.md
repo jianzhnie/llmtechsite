@@ -3,11 +3,11 @@
 
 ### 工具集合
 
-- [Git手册](/toolbox/technical/git-manual)
-- [Linux手册](/toolbox/technical/linux-manual)
-- [Homebrew手册](/toolbox/technical/homebrew)
-- [item2手册](/toolbox/technical/item2-manual)
-- [zsh配置指南](/toolbox/technical/install_zsh)
+- [Git 手册](/toolbox/technical/git-manual)
+- [Linux 手册](/toolbox/technical/linux-manual)
+- [Homebrew 手册](/toolbox/technical/homebrew)
+- [iTerm2 手册](/toolbox/technical/item2-manual)
+- [zsh 配置指南](/toolbox/technical/install_zsh)
 - [其他常用指令](/toolbox/technical/tools)
 - [深度学习环境配置手册](/toolbox/technical/ubuntu-nvidia-cuda-install)
 
@@ -19,4 +19,4 @@
 
 ### Kindle
 
-- [📚Kindle电子书下载](/toolbox/study/kindle)
+- [📚Kindle 电子书下载](/toolbox/study/kindle)
