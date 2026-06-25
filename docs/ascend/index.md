@@ -2,8 +2,8 @@
 
 - [Ascend Pytorch 适配方案介绍](/ascend/AscendPytorch适配方案介绍)
 - [LLamaFactory NPU Docker 镜像配置](/ascend/llamafactory_docker)
-- [Mindspeed-RL使用指南](/ascend/MindSpeed-RL使用指南)
-- [MindSpeed-LLM使用指南](/ascend/MindSpeed-LLM使用指南)
+- [MindSpeed-RL 使用指南](/ascend/MindSpeed-RL使用指南)
+- [MindSpeed-LLM 使用指南](/ascend/MindSpeed-LLM使用指南)
 - [MindSpeed LLM 并行特性介绍](/ascend/mindspeed/README)
 
 

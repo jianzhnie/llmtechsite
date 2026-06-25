@@ -1,15 +1,15 @@
 # RL Tricks 指南
 
-## LLM专用技巧
+## LLM 专用技巧
 
 ### EOS_token
 
 从实现细节上来说，我们假定使用 GPT 模型作为这个奖励模型的基础架构，那么我们有多种思路来预测一个对话的奖励值。
 
-1. 对所有token上预测reward取平均
-2. 在最后一个token，即EOS_token上预测reward
+1. 对所有 Token 上预测 reward 取平均
+2. 在最后一个 Token，即 EOS Token 上预测 reward
 
-这里我们倾向于方式2，因为对于GPT这种模型，只有EOS_token的输出才能看完整句话给出一个整体的评价。这种方式也在 Anthropic 的相关论文中被使用。
+这里我们倾向于方式 2，因为对于 GPT 这种模型，只有 EOS Token 的输出才能看完整句话给出一个整体的评价。这种方式也在 Anthropic 的相关论文中被使用。
 
 ### 基于采样温度缩放（Logits Scaling）
 
@@ -24,7 +24,7 @@ logits /= self.temperature
 
 ### Token Level 惩罚
 
-计算RL模型与SFT模型响应分布的逐词元KL散度[11]，并将其作为惩罚项加入奖励函数。具体公式如下：
+计算 RL 模型与 SFT 模型响应分布的逐词元 KL 散度[11]，并将其作为惩罚项加入奖励函数。具体公式如下：
 $$
 r(s_t, a_t) = \mathbf{I}(s_t = [\text{EOS}]) r(x, y) - \beta \text{KL}(t) \quad (1)
 $$
@@ -37,17 +37,17 @@ $$
 
 ### 广义优势估计（GAE）
 
-使用GAE[10]（一种TD($ \lambda $)回报估计方法）估计PPO中的词元级奖励。实践中通常设 $ \lambda = 1 $，将GAE退化为蒙特卡洛估计。
+使用 GAE[10]（一种 TD($ \lambda $) 回报估计方法）估计 PPO 中的词元级奖励。实践中通常设 $ \lambda = 1 $，将 GAE 退化为蒙特卡洛估计。
 
 ### 添加SFT损失
 
-在PPO中结合监督式下一词元预测损失与KL散度，以保留SFT模型的预训练能力。
+在 PPO 中结合监督式下一词元预测损失与 KL 散度，以保留 SFT 模型的预训练能力。
 
 ## PPO专用技巧
 
 ### 模型初始化
 
-训练LLM时需初始化两个模型——Actor模型（Actor）和评论家模型（Critic）[6,7]。Actor模型通常基于SFT模型初始化，评论家模型基于奖励模型初始化。
+训练 LLM 时需初始化两个模型——Actor 模型（Actor）和评论家模型（Critic）[6,7]。Actor 模型通常基于 SFT 模型初始化，评论家模型基于奖励模型初始化。
 
 ### 限制训练轮数
 
@@ -63,7 +63,7 @@ $$
 
 ### Adam学习率
 
-Actor模型的Adam学习率约为SFT模型的1/10（例如SFT学习率为 $ 5e^{-6} $，Actor模型为 $ 5e^{-7} $）。评论家模型的学习率约为SFT模型的2倍（例如 $ 9e^{-6} $）。
+Actor 模型的 Adam 学习率约为 SFT 模型的 1/10（例如 SFT 学习率为 $5 \times 10^{-6}$，Actor 模型为 $5 \times 10^{-7}$）。评论家模型的学习率约为 SFT 模型的 2 倍（例如 $9 \times 10^{-6}$）。
 
 ### 价值函数损失截断
 
@@ -74,7 +74,7 @@ $$
 
 ### 奖励归一化与截断
 
-在 PPO 的训练种，我们通常会使用 reward normalization 以及 value normalization 等类似技术，我们发现在 RLHF 的训练中 reward normalization 非常有助于训练的稳定性，毕竟我们的 reward 不像在游戏环境中那么规则，而是通过一个模型学出来的中间层输出（这就意味着输出范围可能会很大）。
+在 PPO 的训练中，我们通常会使用 reward normalization 以及 value normalization 等类似技术，我们发现在 RLHF 的训练中 reward normalization 非常有助于训练的稳定性，毕竟我们的 reward 不像在游戏环境中那么规则，而是通过一个模型学出来的中间层输出（这就意味着输出范围可能会很大）。
 
 为避免奖励分布不均衡，采用 Z-score 归一化 $ r = (r - \mu)/\delta $，其中 $ \mu $ 和 $ \delta $ 分别为奖励数据集的均值和标准差。
 
@@ -93,7 +93,7 @@ def whiten(values, shift_mean=True):
 
 ### 优势归一化
 
-同样 Advantage Normalization 也是PPO训练种常用的稳定训练的技术，我们在使用 DeepSpeed 等类似 DDP 的训练手段时应注意做全局样本的 Advantage Normalization，而不是某个DDP进程只针对自己的样本做归一化。
+同样 Advantage Normalization 也是 PPO 训练中常用的稳定训练的技术，我们在使用 DeepSpeed 等类似 DDP 的训练手段时应注意做全局样本的 Advantage Normalization，而不是某个 DDP 进程只针对自己的样本做归一化。
 
 在价值网络训练中，对优势值进行Z-score归一化以抑制异常值影响。
 

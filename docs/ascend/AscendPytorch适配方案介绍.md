@@ -1,4 +1,4 @@
-# Ascend Pytorch 适配方案
+# Ascend PyTorch 适配方案
 
 ## 文档总览
 
@@ -14,18 +14,18 @@
 
 ##  适配方案简介
 
-昇腾是当前国产芯片中唯一能够进行大规模分布式训练集群部署的厂商，其适配了主流的深度学习训练框架，包括自研的Mindspore和适配的TensorFlow和Pytorch。其中PyTorch因其易用性、灵活性和强大的社区支持而受到许多深度学习研究者和开发者的喜爱。昇腾芯片对Pytorch框架的适配能够快速帮助它共享和扩大Pytorch强大的生态，对其未来的发展至关重要。
+昇腾是当前国产芯片中唯一能够进行大规模分布式训练集群部署的厂商，其适配了主流的深度学习训练框架，包括自研的 MindSpore 和适配的 TensorFlow 与 PyTorch。其中 PyTorch 因其易用性、灵活性和强大的社区支持而受到许多深度学习研究者和开发者的喜爱。昇腾芯片对 PyTorch 框架的适配能够帮助它共享和扩大 PyTorch 强大的生态，对其未来的发展至关重要。
 
-对Pytorch适配有两个主要思路：
+对 PyTorch 适配有两个主要思路：
 
-1. 将Pytorch的接口转接到Mindspore对应的接口上；实际上就是将Pytorch的前端代码的计算逻辑映射到Mindspore框架上去，然后由Mindspore去执行；这种方案的问题在于Pytorch和Mindspore的内在逻辑无法相通，比如Pytorch的动态图和Mindspore的静态图直接就可能存在直接矛盾；举一个例子，Mindspore虽然同时支持动态图和静态图，但是一份相同的代码在动态图下可以正常运行，但是在静态图下就会报错。
-2. 利用插件来对原生Pytorch进行适配，针对原生扩展逻辑进行逐一适配，API基本跟Pytorch一致，譬如除开昇腾芯片不支持的fp64数据格式，其它基本都能满足。简单来理解，就是从算子层面对Pytorch的计算后端进行替换，采用昇腾开发的算子来替换GPU算子。这种方案能够充分的利用原生Pytorch框架的优势，也是是Pytorch适配的目标。
+1. 将 PyTorch 的接口转接到 MindSpore 对应的接口上。实际上就是将 PyTorch 前端代码的计算逻辑映射到 MindSpore 框架上去执行。这种方案的问题在于 PyTorch 和 MindSpore 的内在逻辑无法相通，比如 PyTorch 的动态图和 MindSpore 的静态图之间就可能存在直接矛盾。举个例子，MindSpore 虽然同时支持动态图和静态图，但一份相同的代码在动态图下可以正常运行，在静态图下却会报错。
+2. 利用插件对原生 PyTorch 进行适配，针对原生扩展逻辑进行逐一适配，API 基本与 PyTorch 一致。除昇腾芯片不支持的 FP64 数据格式外，其他基本都能满足。简单来说，就是从算子层面对 PyTorch 的计算后端进行替换，采用昇腾开发的算子来替换 GPU 算子。这种方案能够充分利用原生 PyTorch 框架的优势，也是 PyTorch 适配的目标。
 
 ## 插件适配方案
 
 ### 侵入式适配
 
-早期的Ascend Pytorch采用侵入式适配，即直接修改原生Pytorch代码，带来的问题非常明显，比如：
+早期的 Ascend PyTorch 采用侵入式适配，即直接修改原生 PyTorch 代码，带来的问题非常明显：
 
 1. 质量难以控制，且项目测试工程量巨大；
 2. 版本升级困难，每个新版版都需要重新适配；
@@ -76,19 +76,19 @@ Ascend Extension for PyTorch 插件是基于昇腾的深度学习适配框架，
 
 #### PyTorch Adapter的逻辑架构图
 
-在线适配方案：模型执行，训练等主要功能流程有Pytorch框架提供，用户界面API保持不变，将Davinci设备和计算库作为扩展资源注册到PyTorch框架中。
+在线适配方案：模型执行、训练等主要功能流程由 PyTorch 框架提供，用户界面 API 保持不变，将 Davinci 设备和计算库作为扩展资源注册到 PyTorch 框架中。
 
 + 优点：
   + 继承PyTorch动态图特性
   + 继承原生PyTorch使用方式，移植的时候，在开发方式和代码复用方便做到最小的改动；
-  + 继承Pytorch的原生体系结构，保留框架本身出色的特性，比如自动微分，动态分发，Debug，Profiling，Storage共享机制等；
+  + 继承 PyTorch 的原生体系结构，保留框架本身出色的特性，如自动微分、动态分发、Debug、Profiling、Storage 共享机制等；
   + 扩展性：对于新增网络类型或结构，只需增加涉及的算子开发和实现。框架类算子，反向图建立和实现机制等结构可保持复用；
 
 ##  配置与安装
 
 ### 快速安装 Ascend CANN Toolkit
 
-在昇腾 NPU 设备上安装 Pytorch 时，需要安装 **[Ascend CANN Toolkit 与 Kernels](https://www.hiascend.com/developer/download/community/result?module=cann)**，安装方法请参考上面的安装教程或使用以下命令：
+在昇腾 NPU 设备上安装 PyTorch 时，需要安装 **[Ascend CANN Toolkit 与 Kernels](https://www.hiascend.com/developer/download/community/result?module=cann)**，安装方法请参考上面的安装教程或使用以下命令：
 
 ```shell
 # 请替换 URL 为 CANN 版本和设备型号对应的 URL
@@ -115,7 +115,7 @@ source /usr/local/Ascend/ascend-toolkit/set_env.sh
 
 请使用 `ASCEND_RT_VISIBLE_DEVICES` 而非 `CUDA_VISIBLE_DEVICES` 来指定运算设备。
 
-### 快速安装 Ascend Pytorch
+### 快速安装 Ascend PyTorch
 
 ```shell
 # 下载PyTorch安装包
@@ -232,7 +232,7 @@ pip3 install torch_npu-2.2.0.post2-cp310-cp310-manylinux_2_17_x86_64.manylinux20
 
 
 
-## Pytorch模型迁移
+## PyTorch 模型迁移
 
 ### 概述
 

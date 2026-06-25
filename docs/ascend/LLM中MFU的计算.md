@@ -113,14 +113,14 @@ $$[b,s,h] \times [h,V] \Rightarrow 2bshV$$
 
 ### 2.5 模型总 FLOPs
 
-假设GPT模型有 $L$ 层 Transformer 层，则：
+假设 GPT 模型有 $L$ 层 Transformer 层，则：
 
 | 组件                | FLOPs 公式                             |
 | ------------------- | -------------------------------------- |
 | **Self-Attention**  | $8bsh^2 + 4bs^2h$                      |
 | **MLP**             | $16bsh^2$                              |
 | **Embedding**       | $2bshV$                                |
-| **单个Transformer** | $24bsh^2 + 4bs^2h$                     |
+| **单个 Transformer** | $24bsh^2 + 4bs^2h$                     |
 | **整模型总 FLOPs**  | $L \times (24bsh^2 + 4bs^2h) + 2bshV$  |
 
 ## 3. 反向传播与全流程计算

@@ -10,7 +10,7 @@
 |                      | MoE 模型（如 Mixtral, Deepseek） | Device Bound（Dropless）或 Host Bound（Drop） | MoE 路由/通信开销大               |
 | **全参微调**         | 静态/动态序列                    | Device Bound                                  | 显存压力大，计算密集              |
 | **LoRA 微调**        | 静态/动态序列                    | Host Bound                                    | 小参数更新，通信或 CPU 成瓶颈     |
-| **偏好对齐（RLHF）** | Actor/Critic/RM                  | Device Bound                                  | 多模型协同，显存与计算压力        |
+| **偏好对齐（RLHF）** | Actor/Critic/RM                  | Device Bound                                  | 多模型协同，显存与计算压力         |
 | **在线推理 & 搜索**  | —                                | Host Bound                                    | 请求调度、KV Cache 管理、I/O 延迟 |
 
 > ✅ **关键洞察**：

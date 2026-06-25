@@ -4,10 +4,10 @@
 
 版本信息
 
-Python版本：3.10.13
-CANN版本：8.0
-操作系统版本：Ubuntu18.08
-昇腾驱动固件版本：23.0.0以上
+Python 版本：3.10.13
+CANN 版本：8.0
+操作系统版本：Ubuntu 18.04
+昇腾驱动固件版本：23.0.0 以上
 
 使用说明
 
@@ -21,7 +21,7 @@ docker pull swr.cn-east-317.qdrgznjszx.com/donggang/llama-factory-ascend910b:can
 
 #### **镜像启动参考**
 
-创建一个docker_run.sh文件，将下面代码copy到文件中，保存并执行即可启动镜像。
+创建一个 `docker_run.sh` 文件，将下面代码复制到文件中，保存并执行即可启动镜像。
 
 ```bash
 #!/bin/bash
@@ -56,9 +56,9 @@ docker run -it -u root --ipc=host --net=host \
 Error response from daemon: Get "https://swr.cn-east-317.qdrgznjszx.com/v2/": tls: failed to verify certificate: x509: certificate signed by unknown authority
 ```
 
-原因证书问题，证书验证错误
+原因：证书验证错误。
 
-配置dns , `vim /etc/docker/daemon.json`  写入下面内容
+配置 DNS，`vim /etc/docker/daemon.json` 写入下面内容：
 
 ```json
 {
@@ -71,7 +71,7 @@ Error response from daemon: Get "https://swr.cn-east-317.qdrgznjszx.com/v2/": tl
 }
 ```
 
-下面是例子：
+完整配置示例：
 
 ```json
 {
@@ -95,10 +95,10 @@ Error response from daemon: Get "https://swr.cn-east-317.qdrgznjszx.com/v2/": tl
 
 #### 镜像地址
 
-在其他AICC使用本镜像时，
+在其他 AICC 使用本镜像时：
 
-1） 在本地arm宿主机通过docker pull 拉取上面镜像到本地（即执行docker pull remote_image_address）
+1） 在本地 arm 宿主机通过 docker pull 拉取上面镜像到本地（即执行 `docker pull remote_image_address`）
 
-3） 用docker push 将修改后的镜像名称推送到局点的swr服务中（即执行docker push remote_image_address）
+2） 用 docker tag 将局点信息和组织名替换成对应版本（即执行 `docker tag local_image_address remote_image_address`）
 
-2） 用docker tag 将局点信息和组织名替换成对应版本（即执行 docker tag local_image_address remote_image_address），
+3） 用 docker push 将修改后的镜像名称推送到局点的 swr 服务中（即执行 `docker push remote_image_address`）

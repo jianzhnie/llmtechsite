@@ -1,6 +1,6 @@
-# 🚀 PyTorch 分布式与并行训练：深度解析
+# PyTorch 分布式与并行训练：深度解析
 
-PyTorch 的分布式计算能力核心在于 `torch.distributed` 包，其底层基于 **Collective Communication (c10d) 库**实现了高效的跨进程张量通信。本文将重点对 **分布式数据并行训练 (DDP)** 的通信机制、环境配置、核心概念以及底层通信原语进行深入剖析，以确保读者能够专业、高效地应用 PyTorch 进行大规模AI模型训练。
+PyTorch 的分布式计算能力核心在于 `torch.distributed` 包，其底层基于 **Collective Communication (c10d) 库**实现了高效的跨进程张量通信。本文将重点对 **分布式数据并行训练 (DDP)** 的通信机制、环境配置、核心概念以及底层通信原语进行深入剖析，以确保读者能够专业、高效地应用 PyTorch 进行大规模 AI 模型训练。
 
 ## 核心通信机制
 
@@ -13,13 +13,13 @@ PyTorch 的分布式通信主要依赖 `torch.distributed` 包，它支持以下
 
 ## 1. 分布式训练基础模板
 
-`torch.distributed` 包通过**消息传递语义**（Message Passing Semantics）使研究人员和开发者能够将计算任务轻松并行化到多个进程，无论是单机多卡还是多机集群环境。这与仅支持单机多进程的 `torch.multiprocessing` 包有本质区别，分布式包支持跨机器通信，并且可支持多种通信后端。
+`torch.distributed` 包通过**消息传递语义**（Message Passing Semantics）使研究人员和开发者能够将计算任务轻松并行化到多个进程，无论是单机多卡还是多机集群环境。这与仅支持单机多进程的 `torch.multiprocessing` 包有本质区别。分布式包支持跨机器通信，并且可支持多种通信后端。
 
 ### 1.1 单节点多进程训练模板
 
 以下是一个基础的分布式训练模板，用于在单机上启动多个训练进程。
 
-此模板通过 `torch.multiprocessing` 启动了 $2$ 个独立的进程，每个进程都完成了**分布式环境配置**和**进程组初始化**，随后执行训练函数 `run`。
+此模板通过 `torch.multiprocessing` 启动了 2 个独立的进程，每个进程都完成了**分布式环境配置**和**进程组初始化**，随后执行训练函数 `run`。
 
 ```python
 """run.py: 基础分布式启动脚本"""
@@ -94,7 +94,7 @@ if __name__ == "__main__":
 ### DDP 核心优势
 
 1. **性能优化**：多进程架构消除 GIL 瓶颈，显著提升计算密集型任务性能
-2. **通信效率**：梯度同步通过高效的集合通信（如 All-Reduce）同步梯度机制避免额外的参数广播步骤，降低通信开销
+2. **通信效率**：梯度同步通过高效的集合通信（如 All-Reduce）实现，避免额外的参数广播步骤，降低通信开销
 3. **扩展能力**：支持模型并行与数据并行混合策略，可处理超大规模模型
 
 ## 3. `torch.distributed` 通信后端
@@ -150,7 +150,7 @@ MPI (Message Passing Interface) 是高性能计算的标准，是 `torch.distrib
 **启动示例**：
 
 1. 训练脚本中替换为 `init_process(0, 0, run, backend='mpi')`
-2. 使用 `mpirun -n 4 python myscript.py` 启动 $4$ 个进程。
+2. 使用 `mpirun -n 4 python myscript.py` 启动 4 个进程。
 
 
 
@@ -191,7 +191,7 @@ torch.distributed.is_torchelastic_launched()  # Torchelastic 启动检测
   - **backend**: 指定通信后端（如 `'nccl'`、`'gloo'`）。
   - **world\_size**: 参与训练的总进程数。
   - **rank**: 当前进程的唯一标识（$0 \le \text{rank} < \text{world\_size}$）。
-  - **init\_method**: 指定进程组的初始化方式（URL字符串），默认为 `"env://"`。
+  - **init\_method**: 指定进程组的初始化方式（URL 字符串），默认为 `"env://"`。
 
 ### 4.3 初始化方法（`init_method`）
 
@@ -199,7 +199,7 @@ PyTorch 支持三种初始化方法，用于协调进程间的连接信息：
 
 #### 1. 环境变量初始化 (`env://`) - 推荐
 
-这是最常用的方法，通过设置环境变量 `MASTER_ADDR`、`MASTER_PORT`、`WORLD_SIZE` 和 `RANK` 来协调进程， 这是 PyTorch 官方启动工具（如 `torchrun`）推荐的方法。
+这是最常用的方法，通过设置环境变量 `MASTER_ADDR`、`MASTER_PORT`、`WORLD_SIZE` 和 `RANK` 来协调进程。这是 PyTorch 官方启动工具（如 `torchrun`）推荐的方法。
 
 ```python
 # 脚本启动前设置环境变量或在代码中设置 os.environ
@@ -448,7 +448,7 @@ def setup_distributed_model(model: torch.nn.Module) -> DDP:
 2. **初始化方法：** 统一采用 `env://` 环境变量方式
 3. **设备管理：** 正确设置 `local_rank` 确保 GPU 设备隔离
 4. **资源管理：** 训练完成后调用 `destroy_process_group()` 清理资源
-5. **进程管理：** 使用 `torchrun`  作为分布式训练启动工具
+5. **进程管理：** 使用 `torchrun` 作为分布式训练启动工具
 
 ## Reference:
 
