@@ -1,0 +1,1 @@
+var e=`/llmtechsite/assets/gpipe-paper-figure-2.DwRbl4KQ.png`;export{e as t};
